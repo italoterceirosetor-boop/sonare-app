@@ -97,16 +97,82 @@ async function adminLogoutFirebase() {
   if (firebaseAuth) await firebaseAuth.signOut();
 }
 
-/** true se o usuário logado está em /admins/{uid} */
-async function isAdminFirebase() {
+/* ============================================================
+   PAPÉIS NO ADMIN
+   /admins/{uid} = true          → dono (gerencia professores)
+   /admins/{uid} = 'professor'   → professor convidado
+   /professores/{email,com,virgulas} = { email, nome, adicionadoEm, acesso }
+   O professor convidado se registra sozinho no 1º login com Google.
+============================================================ */
+function chaveEmail(email) {
+  // mesma conversão das regras: minúsculas e "." → "," (Firebase não aceita ponto em chave)
+  return String(email || '').trim().toLowerCase().replace(/\./g, ',');
+}
+
+/** 'dono' | 'professor' | null */
+async function papelAdminFirebase() {
   const ok = await initFirebase();
   const user = firebaseAuth?.currentUser;
-  if (!ok || !user || user.isAnonymous) return false;
+  if (!ok || !user || user.isAnonymous) return null;
+  let val = null;
   try {
-    const snap = await firebaseDb.ref(`/admins/${user.uid}`).once('value');
-    return snap.val() === true;
+    val = (await firebaseDb.ref(`/admins/${user.uid}`).once('value')).val();
+  } catch (e) { /* sem permissão = não é admin */ }
+  if (val === true) return 'dono';
+
+  if (!user.email) return null;
+  const chave = chaveEmail(user.email);
+  let convite = null;
+  try {
+    convite = (await firebaseDb.ref(`/professores/${chave}`).once('value')).val();
+  } catch (e) { /* sem convite */ }
+  if (!convite) return null;
+
+  try {
+    // Primeiro acesso (ou acesso de volta): registra como professor
+    if (val !== 'professor') await firebaseDb.ref(`/admins/${user.uid}`).set('professor');
+    await firebaseDb.ref(`/professores/${chave}/acesso`).set({
+      uid: user.uid,
+      nome: user.displayName || '',
+      em: Date.now(),
+    });
+    return 'professor';
   } catch (e) {
-    return false;
+    console.warn('[admin] não consegui registrar professor:', e.message);
+    return null;
+  }
+}
+
+/** true se o usuário logado pode usar o painel admin */
+async function isAdminFirebase() {
+  window.SONARE_PAPEL = await papelAdminFirebase();
+  return !!window.SONARE_PAPEL;
+}
+
+/* ---------- Professores (só o dono) ---------- */
+async function listarProfessoresFirebase() {
+  await initFirebase();
+  const snap = await firebaseDb.ref('/professores').once('value');
+  return Object.entries(snap.val() || {}).map(([chave, p]) => ({ chave, ...p }));
+}
+
+async function adicionarProfessorFirebase(email, nome) {
+  await initFirebase();
+  email = String(email || '').trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('E-mail inválido.');
+  await firebaseDb.ref(`/professores/${chaveEmail(email)}`).set({
+    email, nome: String(nome || '').trim(), adicionadoEm: Date.now(),
+  });
+}
+
+async function removerProfessorFirebase(chave) {
+  await initFirebase();
+  const snap = await firebaseDb.ref(`/professores/${chave}`).once('value');
+  const uid = snap.val()?.acesso?.uid;
+  // Sem o convite, as regras já bloqueiam o acesso; apaga também o registro
+  await firebaseDb.ref(`/professores/${chave}`).remove();
+  if (uid && uid !== firebaseAuth.currentUser?.uid) {
+    try { await firebaseDb.ref(`/admins/${uid}`).remove(); } catch (e) {}
   }
 }
 
@@ -379,6 +445,10 @@ window.adminLogoutFirebase = adminLogoutFirebase;
 window.adminGoogleLoginFirebase = adminGoogleLoginFirebase;
 window.adminGoogleRedirectResultFirebase = adminGoogleRedirectResultFirebase;
 window.isAdminFirebase = isAdminFirebase;
+window.papelAdminFirebase = papelAdminFirebase;
+window.listarProfessoresFirebase = listarProfessoresFirebase;
+window.adicionarProfessorFirebase = adicionarProfessorFirebase;
+window.removerProfessorFirebase = removerProfessorFirebase;
 window.currentUserFirebase = currentUserFirebase;
 window.loginAlunoFirebase = loginAlunoFirebase;
 window.checarAlunoFirebase = checarAlunoFirebase;

@@ -58,6 +58,8 @@ function showLogin() {
 
   input.onkeydown = (e) => { if (e.key === 'Enter') submit(); };
   $('#entrar').onclick = submit;
+  const linkInstalar = $('#como-instalar');
+  if (linkInstalar) linkInstalar.onclick = (e) => { e.preventDefault(); Install.open(); };
 }
 
 /* ============================================================
@@ -199,6 +201,9 @@ async function bootstrap() {
   $('#login-screen').style.display = 'none';
   $('#app-screen').style.display = '';
   document.body.classList.add('app-loaded');
+
+  // Nível do aluno: usado pra mostrar só a teoria do nível dele
+  window.SONARE_NIVEL = aluno.nivel || null;
 
   const primeiroNome = aluno.nome.split(' ')[0];
   $('#aluno-nome').textContent = primeiroNome;

@@ -172,6 +172,44 @@ const Theory = {
     modal.hidden = false;
   },
 
+  /**
+   * Monta os botões de tópicos a partir do conteúdo atual (inclui os
+   * tópicos novos criados no admin). Esconde tópicos de outro nível.
+   */
+  renderTabs(manterAtivo = true) {
+    const wrap = document.querySelector('.theory-tabs');
+    if (!wrap) return;
+    const fonte = (typeof THEORY_CONTENT !== 'undefined' ? THEORY_CONTENT : window.THEORY_CONTENT) || {};
+    const nivelAluno = window.SONARE_NIVEL || null;
+    const ORDEM = ['notes', 'chords', 'scales', 'chordProgressions', 'chordReading', 'tab'];
+    const chaves = Object.keys(fonte)
+      .filter(k => fonte[k] && (!fonte[k].nivel || !nivelAluno || fonte[k].nivel === nivelAluno))
+      .sort((a, b) => {
+        const ia = ORDEM.indexOf(a), ib = ORDEM.indexOf(b);
+        if (ia !== -1 || ib !== -1) return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+        return String(fonte[a].title || a).localeCompare(String(fonte[b].title || b));
+      });
+
+    const ativoAntes = manterAtivo ? wrap.querySelector('.theory-tab.active')?.dataset.topic : null;
+    const ativo = chaves.includes(ativoAntes) ? ativoAntes : chaves[0];
+
+    wrap.innerHTML = '';
+    for (const k of chaves) {
+      const b = document.createElement('button');
+      b.className = 'theory-tab' + (k === ativo ? ' active' : '');
+      b.dataset.topic = k;
+      b.textContent = fonte[k].title || k;
+      b.addEventListener('click', () => {
+        wrap.querySelectorAll('.theory-tab').forEach(t => t.classList.remove('active'));
+        b.classList.add('active');
+        this.showTabContent(k);
+      });
+      wrap.appendChild(b);
+    }
+    if (ativo) this.showTabContent(ativo);
+    else document.getElementById('theoryContent').innerHTML = '<p class="muted">Nenhum tópico de teoria no seu nível ainda.</p>';
+  },
+
   showTabContent(topic) {
     const content = document.getElementById('theoryContent');
     const fonteTeoria = (typeof THEORY_CONTENT !== 'undefined' ? THEORY_CONTENT : (window.THEORY_CONTENT || (window.SonareConteudo && window.SonareConteudo.teoria) || {}));

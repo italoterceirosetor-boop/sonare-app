@@ -15,14 +15,8 @@ const SonareApp = {
     this.bindTabs();
     this.bindModals();
     this.bindCards();
-    Theory.showTabContent('notes');
-    document.querySelectorAll('.theory-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.theory-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        Theory.showTabContent(tab.dataset.topic);
-      });
-    });
+    // Botões de teoria montados a partir do conteúdo (inclui tópicos novos do admin)
+    Theory.renderTabs(false);
 
     Tuner.init();
     Metronome.init();
@@ -91,8 +85,7 @@ const SonareApp = {
       Exercises.render();
       Lessons.render();
       Songs.render();
-      const ativo = document.querySelector('.theory-tab.active');
-      Theory.showTabContent(ativo ? ativo.dataset.topic : 'notes');
+      Theory.renderTabs(true);
       this.updateProgress();
     } catch (e) {
       console.warn('[conteudo] re-render:', e);

@@ -129,13 +129,18 @@
     </div>
     <div class="code-entry__error" id="admin-error"></div>
     <div id="admin-uid-box" style="display:none; margin-top: 16px; font-size: .85rem; color: var(--cream-dim); text-align: left;">
-      <p>Você entrou como <strong id="admin-quem"></strong>, mas esta conta ainda não é professor no banco.</p>
-      <p style="margin-top: 8px;">No console do Firebase, em <strong>Realtime Database → Dados</strong>, crie
-      <code>admins</code> → <em>(este código)</em> = <code>true</code>:</p>
-      <code id="admin-uid" style="display:block; margin-top: 8px; padding: 8px; background: var(--ink-3, #222); word-break: break-all; user-select: all;"></code>
-      <button type="button" class="btn btn--gold btn--block" id="admin-copiar-uid" style="margin-top: 8px;">Copiar código</button>
-      <p style="margin-top: 8px;">Depois de salvar no Firebase, recarregue esta página.</p>
-      <button type="button" class="btn btn--ghost btn--block" id="admin-sair-sem-acesso" style="margin-top: 8px;">Sair</button>
+      <p>Você entrou como <strong id="admin-quem"></strong>, mas esta conta ainda não tem acesso ao painel.</p>
+      <p style="margin-top: 8px;">Peça ao responsável pela escola para cadastrar este Gmail na aba
+      <strong>Professores</strong> do painel. Depois é só entrar de novo.</p>
+      <details style="margin-top: 12px;">
+        <summary style="cursor: pointer;">Sou o dono do painel (configuração inicial)</summary>
+        <p style="margin-top: 8px;">No console do Firebase, em <strong>Realtime Database → Dados</strong>, crie
+        <code>admins</code> → <em>(este código)</em> = <code>true</code>:</p>
+        <code id="admin-uid" style="display:block; margin-top: 8px; padding: 8px; background: var(--ink-3, #222); word-break: break-all; user-select: all;"></code>
+        <button type="button" class="btn btn--ghost btn--block" id="admin-copiar-uid" style="margin-top: 8px;">Copiar código</button>
+      </details>
+      <button type="button" class="btn btn--gold btn--block" onclick="location.reload()" style="margin-top: 12px;">Tentar de novo</button>
+      <button type="button" class="btn btn--ghost btn--block" id="admin-sair-sem-acesso" style="margin-top: 8px;">Sair / trocar de conta</button>
     </div>
   </div>
 </div>

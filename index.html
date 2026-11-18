@@ -8,7 +8,7 @@
 <meta name="description" content="App da escola Sonare: aulas, afinador, cifras, teoria, exercícios, tarefas e lembretes de estudo." />
 <link rel="manifest" href="./manifest.webmanifest" />
 <link rel="icon" type="image/png" href="assets/icon-192.png" />
-<link rel="apple-touch-icon" href="assets/icon-192.png" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="Sonare" />
@@ -19,63 +19,57 @@
 <link rel="stylesheet" href="css/styles.css" />
 <link rel="stylesheet" href="css/sonare-features.css" />
 <style>
-/* === ANIMAÇÕES DO LOGO === */
-.bar-left {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: pulseLeft 1.5s ease-in-out infinite alternate;
-}
-.bar-right {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: pulseRight 1.5s ease-in-out infinite alternate;
-}
-@keyframes pulseLeft {
-  0%   { transform: scaleY(0.85); }
-  100% { transform: scaleY(1.20); }
-}
-@keyframes pulseRight {
-  0%   { transform: scaleY(0.85); }
-  100% { transform: scaleY(1.20); }
-}
-.bar-left:nth-child(odd)  { animation-delay: 0.0s; }
-.bar-left:nth-child(even) { animation-delay: 0.25s; }
-.bar-left:nth-child(3n)   { animation-delay: 0.5s; }
-.bar-right:nth-child(odd) { animation-delay: 0.15s; }
-.bar-right:nth-child(even){ animation-delay: 0.40s; }
-.bar-right:nth-child(3n)  { animation-delay: 0.65s; }
-
-.center-symbol {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: glow 3s ease-in-out infinite alternate;
-}
-@keyframes glow {
-  0%   { filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.35)); }
-  100% { filter: drop-shadow(0 0 24px rgba(212, 175, 55, 0.7)); }
-}
-
+/* === LOGO (imagem original da Sonare) ===
+   Entra com fade, depois "respira" com um brilho dourado suave.
+   As bordas da imagem somem no fundo escuro (máscara radial). */
 .login-logo-wrap {
-  animation: fadeIn 1.5s ease-in-out;
+  position: relative;
   width: 100%;
-  max-width: 600px;
+  max-width: 560px;
   margin: 0 auto 24px;
+  animation: logoEntra 1.4s ease-out both;
 }
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.92); }
-  to   { opacity: 1; transform: scale(1); }
+.login-logo-wrap::before {
+  /* halo dourado atrás do símbolo */
+  content: '';
+  position: absolute;
+  left: 50%; top: 42%;
+  width: 46%; aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.35) 0%, rgba(212, 175, 55, 0) 65%);
+  filter: blur(8px);
+  animation: logoBrilho 3.2s ease-in-out 1.4s infinite alternate;
+  pointer-events: none;
 }
 .login-logo {
+  position: relative;
   width: 100%;
-  max-width: 600px;
   height: auto;
   display: block;
+  -webkit-mask-image: radial-gradient(ellipse 72% 70% at 50% 50%, #000 55%, transparent 100%);
+          mask-image: radial-gradient(ellipse 72% 70% at 50% 50%, #000 55%, transparent 100%);
+  animation: logoRespira 3.2s ease-in-out 1.4s infinite alternate;
+}
+@keyframes logoEntra {
+  from { opacity: 0; transform: translateY(8px) scale(0.96); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes logoBrilho {
+  from { opacity: 0.35; }
+  to   { opacity: 1; }
+}
+@keyframes logoRespira {
+  from { filter: brightness(0.95); }
+  to   { filter: brightness(1.12) drop-shadow(0 0 14px rgba(212, 175, 55, 0.25)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .login-logo-wrap, .login-logo-wrap::before, .login-logo { animation: none; }
 }
 @media (max-width: 768px) {
-  .login-logo { max-width: 420px; }
+  .login-logo-wrap { max-width: 420px; }
 }
 @media (max-width: 480px) {
-  .login-logo { max-width: 320px; }
+  .login-logo-wrap { max-width: 320px; }
 }
 </style>
 </head>
@@ -84,7 +78,7 @@
 <!-- TELA DE LOGIN -->
 <div id="login-screen" class="app" style="display:none;">
   <div class="login-logo-wrap">
-    <img src="assets/logo.svg" alt="Sonare" class="login-logo" />
+    <img src="assets/logo-sonare.png" alt="Sonare" class="login-logo" width="560" height="320" />
   </div>
 
   <div class="code-entry">
@@ -94,6 +88,9 @@
     <button class="btn btn--gold btn--block" id="entrar">Entrar</button>
     <div class="code-entry__error" id="erro"></div>
   </div>
+  <p style="text-align:center;margin-top:16px">
+    <a href="#" id="como-instalar" style="color:var(--cream-dim, #c9c3b5);font-size:.9rem;text-decoration:underline">📲 Como instalar no celular (iPhone e Android)</a>
+  </p>
 </div>
 
 <!-- APP PRINCIPAL -->

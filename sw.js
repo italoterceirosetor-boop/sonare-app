@@ -2,7 +2,7 @@
    SONARE — Service Worker (v2 — com features do violão)
 ============================================================ */
 
-const CACHE_VERSION = 'sonare-v49';
+const CACHE_VERSION = 'sonare-v50';
 const APP_SHELL = [
   './',
   './index.html',
@@ -14,7 +14,8 @@ const APP_SHELL = [
   './js/ritmos.js',
   './js/progresso.js',
   './js/seguro.js',
-  './assets/logo.svg',
+  './assets/logo-sonare.png',
+  './assets/apple-touch-icon.png',
   './assets/alarm.mp3',
   './css/styles.css',
   './css/sonare-features.css',

@@ -61,9 +61,10 @@ async function render() {
 
     <div class="admin-tabs">
       <button class="admin-tab ${tab==='aulas'?'admin-tab--active':''}" data-tab="aulas">Aulas</button>
-      <button class="admin-tab ${tab==='alunos'?'admin-tab--active':''}" data-tab="alunos">Alunos</button>
+      <button class="admin-tab ${tab==='alunos'?'admin-tab--active':''}" data-tab="alunos">Alunos${window.SONARE_PARADOS ? ` <span title="alunos sem praticar" style="background:var(--danger,#e76f51);color:#fff;border-radius:999px;padding:0 7px;font-size:.75rem;">⚠ ${window.SONARE_PARADOS}</span>` : ''}</button>
       <button class="admin-tab ${tab==='conteudo'?'admin-tab--active':''}" data-tab="conteudo">Conteúdo</button>
       <button class="admin-tab ${tab==='dados'?'admin-tab--active':''}" data-tab="dados">Dados</button>
+      ${window.SONARE_PAPEL === 'dono' ? `<button class="admin-tab ${tab==='professores'?'admin-tab--active':''}" data-tab="professores">Professores</button>` : ''}
     </div>
   `;
 
@@ -76,7 +77,92 @@ async function render() {
   if (tab === 'aulas') await renderAulas();
   else if (tab === 'alunos') await renderAlunos();
   else if (tab === 'conteudo') await renderConteudo();
+  else if (tab === 'professores' && window.SONARE_PAPEL === 'dono') await renderProfessores();
   else await renderDados();
+}
+
+/* ============================================================
+   PROFESSORES (só o dono vê esta aba)
+   O dono cadastra o Gmail; o professor entra com "Entrar com Google"
+   e o acesso é liberado sozinho.
+============================================================ */
+async function renderProfessores() {
+  let lista = [];
+  let erro = '';
+  try {
+    lista = await window.listarProfessoresFirebase();
+  } catch (e) {
+    erro = 'Não consegui carregar os professores: ' + e.message;
+  }
+  lista.sort((a, b) => (a.nome || a.email).localeCompare(b.nome || b.email));
+
+  const linkAdmin = location.origin + location.pathname;
+  $('#app').insertAdjacentHTML('beforeend', `
+    <div class="card" style="cursor: default;">
+      <h3 class="card__title" style="margin-bottom: 8px;">Adicionar professor</h3>
+      <p class="card__desc" style="margin-bottom: 16px;">Digite o Gmail do professor. Ele entra em
+        <strong>${escapeHTML(linkAdmin)}</strong> clicando em "Entrar com Google" com esse Gmail — sem senha e sem mexer no Firebase.</p>
+      <form id="form-prof">
+        <div class="row">
+          <div class="field">
+            <label class="field__label">Nome</label>
+            <input class="field__input" name="nome" placeholder="Ex.: Lucas Stocco" />
+          </div>
+          <div class="field">
+            <label class="field__label">Gmail</label>
+            <input class="field__input" name="email" type="email" required placeholder="professor@gmail.com" style="text-transform: none;" />
+          </div>
+        </div>
+        <button type="submit" class="btn btn--gold btn--block">Adicionar professor</button>
+      </form>
+    </div>
+    ${erro ? `<div class="empty-state"><strong>Erro</strong>${escapeHTML(erro)}</div>` : ''}
+    <p class="section-title">Professores (${lista.length})</p>
+    ${lista.length === 0 && !erro ? '<div class="empty-state"><strong>Nenhum professor cadastrado</strong>Só você (dono) tem acesso por enquanto.</div>' : ''}
+    ${lista.map(p => `
+      <div class="list-item">
+        <div style="flex: 1; min-width: 0;">
+          <div class="list-item__title">${escapeHTML(p.nome || p.email)}</div>
+          <div class="list-item__sub">${escapeHTML(p.email)}</div>
+          <div class="list-item__sub" style="margin-top: 4px; font-size: .85rem; color: ${p.acesso ? 'var(--gold)' : 'var(--cream-dim)'};">
+            ${p.acesso ? '✓ entrou pela última vez em ' + new Date(p.acesso.em).toLocaleDateString('pt-BR') : '⏳ ainda não entrou'}
+          </div>
+        </div>
+        <div class="list-item__actions">
+          <button class="btn btn--danger" data-rem-prof="${escapeHTML(p.chave)}">Remover</button>
+        </div>
+      </div>
+    `).join('')}
+    <p class="card__desc" style="margin: 16px;">Professores podem cuidar de aulas, alunos e conteúdo. Só você adiciona ou remove professores.</p>
+  `);
+
+  $('#form-prof').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    try {
+      await window.adicionarProfessorFirebase(fd.get('email'), fd.get('nome'));
+      showToast('Professor adicionado. Avise ele pra entrar com o Google.');
+      render();
+    } catch (err) {
+      showToast(err.message || 'Não consegui adicionar.');
+      btn.disabled = false;
+    }
+  });
+
+  $$('[data-rem-prof]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm('Remover o acesso deste professor ao painel?')) return;
+      try {
+        await window.removerProfessorFirebase(btn.dataset.remProf);
+        showToast('Professor removido.');
+      } catch (err) {
+        showToast('Não consegui remover: ' + err.message);
+      }
+      render();
+    });
+  });
 }
 
 /* ============================================================
@@ -253,6 +339,7 @@ async function renderAlunos() {
   }
 
   const alunos = await getAll('alunos');
+  window.SONARE_PARADOS = contarParados(alunos);
 
   const form = `
     <div class="card" style="cursor: default;">
@@ -278,6 +365,7 @@ async function renderAlunos() {
 
   const lista = `
     ${avisoOffline}
+    ${alunos.length ? cardAlunosParados(alunos) : ''}
     <p class="section-title">Alunos cadastrados (${alunos.length})</p>
     ${alunos.length === 0 ? '<div class="empty-state"><strong>Nenhum aluno</strong>Cadastre o primeiro acima.</div>' : ''}
     ${alunos.sort((a,b) => a.nome.localeCompare(b.nome)).map(a => {
@@ -369,6 +457,11 @@ async function renderAlunos() {
     render();
   });
 
+  $('#limite-parado')?.addEventListener('change', (e) => {
+    try { localStorage.setItem('sonare-admin-limite-parado', e.target.value); } catch {}
+    render();
+  });
+
   $$('[data-copy]').forEach(btn => {
     btn.addEventListener('click', async () => {
       try {
@@ -421,6 +514,58 @@ async function renderAlunos() {
       openAlarmeModal(aluno);
     });
   });
+}
+
+/**
+ * Dias desde o último treino registrado (minutos > 0).
+ * null = aluno ainda não enviou progresso (nunca abriu o app novo).
+ */
+function diasSemPraticar(p) {
+  if (!p || !p.updatedAt) return null;
+  let pratica = {};
+  try { pratica = JSON.parse(p.practiceData || '{}') || {}; } catch {}
+  const dias = Object.keys(pratica).filter(d => (Number(pratica[d]) || 0) > 0).sort();
+  // Sem nenhum treino: conta desde a última vez que o app sincronizou
+  const ultimo = dias.length ? new Date(dias[dias.length - 1] + 'T12:00') : new Date(p.updatedAt);
+  const hoje = new Date(); hoje.setHours(12, 0, 0, 0);
+  ultimo.setHours(12, 0, 0, 0);
+  return Math.max(0, Math.round((hoje - ultimo) / 86400000));
+}
+
+function contarParados(alunos) {
+  const limite = getLimiteParado();
+  return alunos.filter(a => !a.revogado && (diasSemPraticar(a.progresso) ?? -1) >= limite).length;
+}
+
+function getLimiteParado() {
+  const n = Number(localStorage.getItem('sonare-admin-limite-parado'));
+  return n > 0 ? n : 3;
+}
+
+/** Card no topo da aba Alunos com quem está sem praticar há X dias */
+function cardAlunosParados(alunos) {
+  const limite = getLimiteParado();
+  const ativos = alunos.filter(a => !a.revogado);
+  const parados = ativos
+    .map(a => ({ a, dias: diasSemPraticar(a.progresso) }))
+    .filter(x => x.dias !== null && x.dias >= limite)
+    .sort((x, y) => y.dias - x.dias);
+  const semApp = ativos.filter(a => diasSemPraticar(a.progresso) === null);
+
+  const opcoes = [2, 3, 5, 7, 14].map(n => `<option value="${n}" ${n === limite ? 'selected' : ''}>${n} dias</option>`).join('');
+  return `
+    <div class="card" style="cursor: default; border-color: ${parados.length ? 'var(--danger, #e76f51)' : 'var(--border)'};">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+        <h3 class="card__title">${parados.length ? '⚠️' : '✅'} Alunos sem praticar</h3>
+        <label style="font-size:.8rem;color:var(--cream-dim);">avisar depois de
+          <select class="field__select" id="limite-parado" style="width:auto;display:inline-block;padding:4px 8px;">${opcoes}</select>
+        </label>
+      </div>
+      ${parados.length
+        ? parados.map(({ a, dias }) => `<div class="list-item__sub" style="margin:6px 0;"><strong style="color:var(--cream)">${escapeHTML(a.nome)}</strong> — ${dias} dia(s) sem praticar</div>`).join('')
+        : `<p class="card__desc">Ninguém está há ${limite} dias ou mais sem praticar. 🎉</p>`}
+      ${semApp.length ? `<p class="card__desc" style="margin-top:8px;">📵 Ainda não abriram o app novo: ${semApp.map(a => escapeHTML(a.nome)).join(', ')}</p>` : ''}
+    </div>`;
 }
 
 /** Resumo do progresso que o app do aluno envia (/alunos/{id}/progresso) */
@@ -694,12 +839,33 @@ async function renderConteudo() {
 
   $$('.teoria-add-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const novo = prompt('Nome do novo tópico (ex: rhythm):');
-      if (!novo) return;
+      const titulo = (prompt('Título do novo tópico (ex.: Ritmo e Compasso):') || '').trim();
+      if (!titulo) return;
+      // Chave sem acento/espaço/ponto (o Firebase não aceita alguns caracteres em chaves)
+      let chave = 't_' + titulo.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 40);
+      const existentes = (window.SonareConteudo || {}).teoria || {};
+      while (existentes[chave]) chave += '_2';
       const novoConteudo = { ...(window.SonareConteudo || {}) };
-      novoConteudo.teoria = { ...(novoConteudo.teoria || {}), [novo]: { title: novo, html: '<h3>' + novo + '</h3><p>...</p>' } };
+      novoConteudo.teoria = { ...existentes, [chave]: { title: titulo, html: '<h3>' + escapeHTML(titulo) + '</h3><p>Escreva o conteúdo aqui.</p>' } };
       novoConteudo.version = new Date().toISOString();
-      saveConteudoLocal(novoConteudo).then(() => render());
+      saveConteudoLocal(novoConteudo).then(() => {
+        showToast('Tópico criado. Clique em "Editar" pra escrever o conteúdo.');
+        render();
+      });
+    });
+  });
+
+  $$('.teoria-del-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const topic = btn.dataset.topic;
+      if (!confirm('Excluir este tópico de teoria? Os alunos deixam de ver.')) return;
+      const novoConteudo = { ...(window.SonareConteudo || {}) };
+      const teoria = { ...(novoConteudo.teoria || {}) };
+      delete teoria[topic];
+      novoConteudo.teoria = teoria;
+      await saveConteudoLocal(novoConteudo);
+      showToast('Tópico excluído.');
+      render();
     });
   });
 
@@ -898,6 +1064,7 @@ function renderTeoriaEditor(teoria) {
           </div>
           <div class="list-item__actions">
             <button class="btn btn--ghost teoria-edit-btn" data-topic="${escapeHTML(key)}">Editar</button>
+            ${['notes', 'chords', 'scales', 'chordProgressions', 'chordReading', 'tab'].includes(key) ? '' : `<button class="btn btn--danger teoria-del-btn" data-topic="${escapeHTML(key)}">Excluir</button>`}
           </div>
         </div>
       `).join('')}
@@ -1136,6 +1303,12 @@ async function bootstrap() {
       console.warn('[admin] não consegui atualizar /codigos:', e.message);
     }
   }
+
+  // Conta alunos parados pro aviso na aba "Alunos"
+  try {
+    const snap = await window.firebase.database().ref('/alunos').once('value');
+    window.SONARE_PARADOS = contarParados(Object.values(snap.val() || {}));
+  } catch (e) {}
 
   render();
 }
