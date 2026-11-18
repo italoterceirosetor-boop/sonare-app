@@ -63,6 +63,36 @@ async function adminLoginFirebase(email, senha) {
   return firebaseAuth.currentUser;
 }
 
+/**
+ * Login do professor com a conta Google.
+ * Usa janela pop-up; se o navegador bloquear (comum no celular),
+ * cai pro redirecionamento (sai da página e volta logado).
+ */
+async function adminGoogleLoginFirebase() {
+  const ok = await initFirebase();
+  if (!ok) throw new Error('Sem conexão com o servidor.');
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+  try {
+    await firebaseAuth.signInWithPopup(provider);
+  } catch (e) {
+    if (/popup-blocked|operation-not-supported-in-this-environment/.test(e.code || '')) {
+      await firebaseAuth.signInWithRedirect(provider);
+      return null; // a página vai recarregar
+    }
+    throw e;
+  }
+  return firebaseAuth.currentUser;
+}
+
+/** Depois de voltar de um login por redirecionamento: lança o erro, se houver */
+async function adminGoogleRedirectResultFirebase() {
+  const ok = await initFirebase();
+  if (!ok) return null;
+  const r = await firebaseAuth.getRedirectResult();
+  return r?.user || null;
+}
+
 async function adminLogoutFirebase() {
   if (firebaseAuth) await firebaseAuth.signOut();
 }
@@ -345,6 +375,8 @@ async function deleteMusicaFirebase(mId) {
 window.initFirebase = initFirebase;
 window.adminLoginFirebase = adminLoginFirebase;
 window.adminLogoutFirebase = adminLogoutFirebase;
+window.adminGoogleLoginFirebase = adminGoogleLoginFirebase;
+window.adminGoogleRedirectResultFirebase = adminGoogleRedirectResultFirebase;
 window.isAdminFirebase = isAdminFirebase;
 window.currentUserFirebase = currentUserFirebase;
 window.loginAlunoFirebase = loginAlunoFirebase;

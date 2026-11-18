@@ -115,16 +115,26 @@
 <div id="login-screen" class="app" style="display:none;">
   <div class="code-entry" style="max-width: 420px; margin: 80px auto;">
     <h2>🔒 Painel Admin</h2>
-    <p>Entre com o e-mail e a senha do professor.</p>
-    <form id="admin-form">
+    <p>Entre com a conta Google do professor.</p>
+    <div id="admin-google-box">
+      <button type="button" class="btn btn--gold btn--block" id="admin-google" style="margin-top: 12px;">Entrar com Google</button>
+      <details style="margin-top: 16px; color: var(--cream-dim); font-size: .85rem;">
+        <summary style="cursor: pointer;">Entrar com e-mail e senha</summary>
+    <form id="admin-form" style="margin-top: 8px;">
       <input class="code-entry__input" id="admin-email" type="email" placeholder="e-mail" autocomplete="username" required style="text-align: center; letter-spacing: normal; text-transform: none;" />
       <input class="code-entry__input" id="admin-password" type="password" placeholder="senha" autocomplete="current-password" required style="text-align: center; letter-spacing: normal; text-transform: none; margin-top: 8px;" />
-      <button type="submit" class="btn btn--gold btn--block" id="admin-enter" style="margin-top: 12px;">Entrar</button>
+      <button type="submit" class="btn btn--ghost btn--block" id="admin-enter" style="margin-top: 12px;">Entrar</button>
     </form>
+      </details>
+    </div>
     <div class="code-entry__error" id="admin-error"></div>
-    <div id="admin-uid-box" style="display:none; margin-top: 16px; font-size: .8rem; color: var(--cream-dim); text-align: left;">
-      Este usuário ainda não é professor no banco. No console do Firebase,
-      em <strong>Realtime Database</strong>, crie <code>admins</code> → <code id="admin-uid"></code> = <code>true</code>.
+    <div id="admin-uid-box" style="display:none; margin-top: 16px; font-size: .85rem; color: var(--cream-dim); text-align: left;">
+      <p>Você entrou como <strong id="admin-quem"></strong>, mas esta conta ainda não é professor no banco.</p>
+      <p style="margin-top: 8px;">No console do Firebase, em <strong>Realtime Database → Dados</strong>, crie
+      <code>admins</code> → <em>(este código)</em> = <code>true</code>:</p>
+      <code id="admin-uid" style="display:block; margin-top: 8px; padding: 8px; background: var(--ink-3, #222); word-break: break-all; user-select: all;"></code>
+      <button type="button" class="btn btn--gold btn--block" id="admin-copiar-uid" style="margin-top: 8px;">Copiar código</button>
+      <p style="margin-top: 8px;">Depois de salvar no Firebase, recarregue esta página.</p>
       <button type="button" class="btn btn--ghost btn--block" id="admin-sair-sem-acesso" style="margin-top: 8px;">Sair</button>
     </div>
   </div>
@@ -177,12 +187,45 @@
       const user = window.currentUserFirebase();
       if (user && !user.isAnonymous) {
         // Logou, mas ainda não foi liberado como professor no banco
-        form.style.display = 'none';
+        document.getElementById('admin-google-box').style.display = 'none';
+        document.getElementById('admin-quem').textContent = user.email || user.displayName || 'esta conta';
         document.getElementById('admin-uid').textContent = user.uid;
         uidBox.style.display = '';
       }
       return false;
     }
+
+    function mensagemErro(ex) {
+      const code = ex.code || '';
+      return /wrong-password|user-not-found|invalid-credential|invalid-login|invalid-email/.test(code) ? 'E-mail ou senha incorretos.' :
+        /too-many-requests/.test(code) ? 'Muitas tentativas. Espere alguns minutos.' :
+        /operation-not-allowed/.test(code) ? 'Este tipo de login não está ativado no Firebase (Authentication → Método de login).' :
+        /unauthorized-domain/.test(code) ? 'Este site não está autorizado no Firebase (Authentication → Configurações → Domínios autorizados → adicionar ' + location.hostname + ').' :
+        /popup-closed-by-user|cancelled-popup-request/.test(code) ? '' :
+        'Não consegui entrar: ' + (ex.message || ex);
+    }
+
+    document.getElementById('admin-google').addEventListener('click', async (e) => {
+      err.textContent = '';
+      e.target.disabled = true;
+      try {
+        await window.adminGoogleLoginFirebase();
+        await entrarSeAdmin();
+      } catch (ex) {
+        err.textContent = mensagemErro(ex);
+      } finally {
+        e.target.disabled = false;
+      }
+    });
+
+    document.getElementById('admin-copiar-uid').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(document.getElementById('admin-uid').textContent);
+        document.getElementById('admin-copiar-uid').textContent = 'Copiado ✓';
+      } catch {
+        document.getElementById('admin-copiar-uid').textContent = 'Selecione o código acima e copie';
+      }
+    });
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -193,12 +236,7 @@
         senha.value = '';
         await entrarSeAdmin();
       } catch (ex) {
-        const code = ex.code || '';
-        err.textContent =
-          /wrong-password|user-not-found|invalid-credential|invalid-login|invalid-email/.test(code) ? 'E-mail ou senha incorretos.' :
-          /too-many-requests/.test(code) ? 'Muitas tentativas. Espere alguns minutos.' :
-          /operation-not-allowed/.test(code) ? 'Login por e-mail não está ativado no Firebase.' :
-          'Não consegui entrar: ' + (ex.message || ex);
+        err.textContent = mensagemErro(ex);
       } finally {
         btn.disabled = false;
       }
@@ -219,8 +257,15 @@
       mostrarLogin();
       return;
     }
-    // Se já tem sessão de professor salva, entra direto
-    entrarSeAdmin().then((ok) => { if (!ok) mostrarLogin(); });
+    // Se já tem sessão de professor salva (ou voltou do login Google), entra direto
+    (async () => {
+      try {
+        await window.adminGoogleRedirectResultFirebase();
+      } catch (ex) {
+        err.textContent = mensagemErro(ex);
+      }
+      if (!(await entrarSeAdmin())) mostrarLogin();
+    })();
   })();
 </script>
 </body>

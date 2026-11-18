@@ -2,7 +2,7 @@
    SONARE — Service Worker (v2 — com features do violão)
 ============================================================ */
 
-const CACHE_VERSION = 'sonare-v46';
+const CACHE_VERSION = 'sonare-v47';
 const APP_SHELL = [
   './',
   './index.html',
