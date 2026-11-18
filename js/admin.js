@@ -203,34 +203,22 @@ async function renderAulas() {
    ALUNOS (com configuração de alarme)
 ============================================================ */
 async function renderAlunos() {
-  // Sync com Firebase (one-shot, sem listener pra evitar duplicação)
-  // Estratégia: Firebase = source of truth. Limpa local e puxa tudo do Firebase.
-  if (window.SonareDB && window.firebase) {
+  // Firebase é a fonte da verdade: a lista mostra SÓ os alunos que estão lá
+  // (antes misturava alunos que existiam só neste aparelho, como os de
+  // demonstração, e os códigos deles não funcionavam pro aluno).
+  let avisoOffline = '';
+  if (window.FIREBASE_CONFIGURED && window.firebase) {
     try {
-      const fbList = await new Promise((resolve) => {
-        const ref = window.firebase?.database?.()?.ref?.('/alunos');
-        if (!ref) return resolve(null);
-        ref.once('value', (snap) => resolve(snap.val() || null), (err) => resolve(null));
-      });
-      if (fbList && Object.keys(fbList).length > 0) {
-        // TEMPORÁRIO: vamos mesclar por código em vez de destruir
-        // 1. Pega os códigos que o Firebase tem
-        const fbByCode = new Map();
-        Object.entries(fbList).forEach(([id, a]) => {
-          if (a.codigo) fbByCode.set(a.codigo, { id, ...a });
-        });
-        // 2. Pega os locais
-        const locais = await getAll('alunos');
-        // 3. Pra cada um do Firebase, atualiza o local pelo codigo (ou adiciona)
-        for (const fb of fbByCode.values()) {
-          const local = locais.find(l => l.codigo === fb.codigo);
-          await put('alunos', { ...fb, id: local?.id || fb.id });
-        }
-        // 4. Mantém locais que não tão no Firebase (não duplica)
-        console.log(`[admin] Sincronizou ${fbByCode.size} alunos do Firebase`);
+      const snap = await window.firebase.database().ref('/alunos').once('value');
+      const fbList = snap.val() || {};
+      await clear('alunos');
+      for (const [id, a] of Object.entries(fbList)) {
+        if (a && a.codigo) await put('alunos', { ...a, id: String(id) });
       }
+      console.log(`[admin] ${Object.keys(fbList).length} alunos do Firebase`);
     } catch (e) {
-      console.warn('Firebase sync (alunos) falhou:', e.message);
+      console.warn('Firebase (alunos) falhou:', e.message);
+      avisoOffline = '<div class="empty-state"><strong>Sem conexão com o servidor</strong>Mostrando a última lista salva neste aparelho. Alterações podem não chegar aos alunos.</div>';
     }
   }
 
@@ -259,6 +247,7 @@ async function renderAlunos() {
   `;
 
   const lista = `
+    ${avisoOffline}
     <p class="section-title">Alunos cadastrados (${alunos.length})</p>
     ${alunos.length === 0 ? '<div class="empty-state"><strong>Nenhum aluno</strong>Cadastre o primeiro acima.</div>' : ''}
     ${alunos.sort((a,b) => a.nome.localeCompare(b.nome)).map(a => {
@@ -313,10 +302,8 @@ async function renderAlunos() {
       if (submitBtn) submitBtn.disabled = false;
       return;
     }
-    // Gera id numérico local (mesmo no Firebase)
-    const novoId = alunos.length > 0
-      ? Math.max(...alunos.map(a => Number(a.id) || 0)) + 1
-      : 1;
+    // Id único (o "maior + 1" podia repetir id entre aparelhos e sobrescrever aluno)
+    const novoId = 'a' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
     console.log('[admin] Cadastrando aluno. id=', novoId, 'alunosCount=', alunos.length);
     const aluno = {
       id: novoId,
@@ -327,12 +314,18 @@ async function renderAlunos() {
       nivel: fd.get('nivel') || null,
       alarme: { ...DEFAULT_ALARME_ADMIN },
     };
-    // Salva IDB primeiro
-    await put('alunos', aluno);
-    // Depois Firebase (com mesmo id)
-    if (window.saveAlunoFirebase) {
-      try { await window.saveAlunoFirebase(aluno); } catch (e) {}
+    // Salva no Firebase primeiro: se falhar, o código não funcionaria pro aluno
+    if (window.FIREBASE_CONFIGURED && window.saveAlunoFirebase) {
+      try {
+        await window.saveAlunoFirebase(aluno);
+      } catch (err) {
+        showToast('Não consegui salvar no servidor. Verifique a internet e tente de novo.');
+        window._alunoSubmitting = false;
+        if (submitBtn) submitBtn.disabled = false;
+        return;
+      }
     }
+    await put('alunos', aluno);
     showToast(`Aluno cadastrado. Código: ${codigo}`);
     // Limpa o form antes do render
     e.target.reset();

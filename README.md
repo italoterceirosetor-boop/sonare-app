@@ -29,17 +29,16 @@ celular pela rede local, descubra o IP do PC (`ipconfig`) e abra
 > Service worker só funciona em `http://localhost` ou `https`. Não funciona
 > abrindo o arquivo direto (`file://`).
 
-## Códigos de aluno (primeiro acesso)
+## Códigos de aluno
 
-Dois códigos vêm plantados no `data/seed.json` pra você testar:
+Os alunos são cadastrados no painel admin (aba **Alunos**), que gera códigos
+no formato `XXXX-NNNN` e grava no Firebase. O aluno digita o código no app; o
+servidor confere (índice `/codigos`) sem expor a lista de alunos.
 
-- `DEMO-0001` — Aluno Demonstração
-- `SONA-2024` — Maria Silva
-
-Pelo painel admin (aba **Alunos**) você cadastra novos alunos e gera códigos
-no formato `XXXX-NNNN`. Os códigos ficam guardados no `IndexedDB` do admin —
-**só neste dispositivo**. Para outros admins usarem, exporte e compartilhe o
-JSON, ou recadastrem manualmente.
+O professor entra no admin com a conta Google (ou e-mail/senha) e precisa estar
+liberado em `/admins/{uid}` no Realtime Database. As regras de acesso ficam em
+`database.rules.json` — cole no console do Firebase (Realtime Database → Regras)
+sempre que mudar.
 
 ## Conteúdo de exemplo
 

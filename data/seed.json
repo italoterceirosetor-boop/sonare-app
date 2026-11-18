@@ -1,18 +1,4 @@
 {
-  "alunos": [
-    {
-      "nome": "Aluno Demonstração",
-      "codigo": "DEMO-0001",
-      "criadoEm": 1730000000000,
-      "revogado": false
-    },
-    {
-      "nome": "Maria Silva",
-      "codigo": "SONA-2024",
-      "criadoEm": 1730000000000,
-      "revogado": false
-    }
-  ],
   "aulas": [
     {
       "titulo": "Acordes essenciais do violão",
