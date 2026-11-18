@@ -1,0 +1,52 @@
+{
+  "alunos": [
+    {
+      "nome": "Aluno Demonstração",
+      "codigo": "DEMO-0001",
+      "criadoEm": 1730000000000,
+      "revogado": false
+    },
+    {
+      "nome": "Maria Silva",
+      "codigo": "SONA-2024",
+      "criadoEm": 1730000000000,
+      "revogado": false
+    }
+  ],
+  "aulas": [
+    {
+      "titulo": "Acordes essenciais do violão",
+      "tipo": "video",
+      "instrumento": "violão",
+      "professor": "Leonel Pollack",
+      "midia": "https://www.w3schools.com/html/mov_bbb.mp4",
+      "descricao": "Os 6 acordes que você precisa saber antes de qualquer música.",
+      "ordem": 1,
+      "criadaEm": 1730000000000,
+      "concluida": false
+    },
+    {
+      "titulo": "Exercício de ritmo — pagode",
+      "tipo": "audio",
+      "instrumento": "violão",
+      "professor": "Gesiel",
+      "midia": "https://www.soundjay.com/buttons/sounds/button-3.mp3",
+      "descricao": "Treine o ritmo com a base de pagode. Começa lento, vai acelerando.",
+      "ordem": 2,
+      "criadaEm": 1730000000001,
+      "concluida": false
+    },
+    {
+      "titulo": "Leitura: cifras e diagramas",
+      "tipo": "texto",
+      "instrumento": "violão",
+      "professor": "Leonel Pollack",
+      "midia": "",
+      "texto": "Como ler diagramas de acordes:\n\n• Cada linha horizontal = uma corda\n• A linha de cima = corda Mi (mais fina, agudo)\n• A linha de baixo = corda Lá (mais grossa, grave)\n• Os círculos pretos mostram onde apertar\n• Os números dentro indicam o dedo (1=indicador, 2=médio, 3=anelar, 4=mínimo)\n\nPratique devagar. Memorize a forma do acorde antes de trocar de posição.",
+      "descricao": "Material de apoio pra ler diagramas.",
+      "ordem": 3,
+      "criadaEm": 1730000000002,
+      "concluida": false
+    }
+  ]
+}

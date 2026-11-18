@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0F0E1A" />
+<title>Sonare — Escola de Música</title>
+<meta name="description" content="App da escola Sonare: aulas, afinador, cifras, teoria, exercícios, tarefas e lembretes de estudo." />
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="icon" type="image/png" href="assets/icon-192.png" />
+<link rel="apple-touch-icon" href="assets/icon-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Sonare" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/styles.css" />
+<link rel="stylesheet" href="css/sonare-features.css" />
+<style>
+/* === ANIMAÇÕES DO LOGO === */
+.bar-left {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulseLeft 1.5s ease-in-out infinite alternate;
+}
+.bar-right {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulseRight 1.5s ease-in-out infinite alternate;
+}
+@keyframes pulseLeft {
+  0%   { transform: scaleY(0.85); }
+  100% { transform: scaleY(1.20); }
+}
+@keyframes pulseRight {
+  0%   { transform: scaleY(0.85); }
+  100% { transform: scaleY(1.20); }
+}
+.bar-left:nth-child(odd)  { animation-delay: 0.0s; }
+.bar-left:nth-child(even) { animation-delay: 0.25s; }
+.bar-left:nth-child(3n)   { animation-delay: 0.5s; }
+.bar-right:nth-child(odd) { animation-delay: 0.15s; }
+.bar-right:nth-child(even){ animation-delay: 0.40s; }
+.bar-right:nth-child(3n)  { animation-delay: 0.65s; }
+
+.center-symbol {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: glow 3s ease-in-out infinite alternate;
+}
+@keyframes glow {
+  0%   { filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.35)); }
+  100% { filter: drop-shadow(0 0 24px rgba(212, 175, 55, 0.7)); }
+}
+
+.login-logo-wrap {
+  animation: fadeIn 1.5s ease-in-out;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 24px;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.login-logo {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  display: block;
+}
+@media (max-width: 768px) {
+  .login-logo { max-width: 420px; }
+}
+@media (max-width: 480px) {
+  .login-logo { max-width: 320px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TELA DE LOGIN -->
+<div id="login-screen" class="app" style="display:none;">
+  <div class="login-logo-wrap">
+    <img src="assets/logo.svg" alt="Sonare" class="login-logo" />
+  </div>
+
+  <div class="code-entry">
+    <h2>Bem-vindo à Sonare</h2>
+    <p>Digite o código que seu professor te passou.</p>
+    <input class="code-entry__input" id="codigo" maxlength="9" placeholder="XXXX-0000" autocomplete="off" />
+    <button class="btn btn--gold btn--block" id="entrar">Entrar</button>
+    <div class="code-entry__error" id="erro"></div>
+  </div>
+</div>
+
+<!-- APP PRINCIPAL -->
+<div id="app-screen" style="display:none;">
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-left">
+        <svg viewBox="0 0 32 32" class="brand-icon" aria-hidden="true">
+          <path d="M16 4 C10 4 6 8 6 14 C6 18 8 22 12 24 L12 28 L20 28 L20 24 C24 22 26 18 26 14 C26 8 22 4 16 4 Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          <path d="M16 12 L16 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <h1>Sonare</h1>
+      </div>
+      <div class="brand-actions">
+        <span id="aluno-nome" style="color: var(--cream); letter-spacing: .04em; text-transform: none;"></span>
+        <button id="sair-btn">Sair</button>
+      </div>
+    </div>
+    <nav class="tab-bar" role="tablist">
+      <button class="tab-btn active" data-tab="home" role="tab" aria-selected="true">🏠 Início</button>
+      <button class="tab-btn" data-tab="lessons" role="tab" aria-selected="false">📖 Aulas</button>
+      <button class="tab-btn" data-tab="tuner" role="tab" aria-selected="false">🎯 Afinador</button>
+      <button class="tab-btn" data-tab="songs" role="tab" aria-selected="false">🎵 Músicas</button>
+      <button class="tab-btn" data-tab="theory" role="tab" aria-selected="false">📚 Teoria</button>
+      <button class="tab-btn" data-tab="exercises" role="tab" aria-selected="false">💪 Exercícios</button>
+      <button class="tab-btn" data-tab="tasks" role="tab" aria-selected="false">✅ Tarefas</button>
+      <button class="tab-btn" data-tab="ritmos" role="tab" aria-selected="false">🥁 Ritmos</button>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- HOME -->
+    <section id="tab-home" class="tab-panel active">
+      <h2>Olá, <span id="home-nome">aluno</span> 👋</h2>
+      <p class="muted">Continue sua jornada na música.</p>
+      <div class="card-grid">
+        <div class="card" data-jump="lessons">
+          <div class="card-icon">📖</div>
+          <h3>Aulas</h3>
+          <p>Conteúdo publicado pelo professor</p>
+        </div>
+        <div class="card" data-jump="tuner">
+          <div class="card-icon">🎯</div>
+          <h3>Afinador</h3>
+          <p>Afine com o microfone</p>
+        </div>
+        <div class="card" data-jump="metronome">
+          <div class="card-icon">⏱️</div>
+          <h3>Metrônomo</h3>
+          <p>Mantenha o tempo firme</p>
+        </div>
+        <div class="card" data-jump="songs">
+          <div class="card-icon">🎵</div>
+          <h3>Músicas</h3>
+          <p>26 cifras com transposição</p>
+        </div>
+        <div class="card" data-jump="theory">
+          <div class="card-icon">📚</div>
+          <h3>Teoria</h3>
+          <p>Notas, acordes e escalas</p>
+        </div>
+        <div class="card" data-jump="exercises">
+          <div class="card-icon">💪</div>
+          <h3>Exercícios</h3>
+          <p>Técnica e prática guiada</p>
+        </div>
+        <div class="card" data-jump="ritmos">
+          <div class="card-icon">🥁</div>
+          <h3>Ritmos</h3>
+          <p>Pratique com caixa de ritmos</p>
+        </div>
+        <div class="card" data-jump="tasks">
+          <div class="card-icon">✅</div>
+          <h3>Tarefas</h3>
+          <p>Organize sua rotina</p>
+        </div>
+      </div>
+      <div class="progress-overview">
+        <h3>Seu progresso</h3>
+        <div class="progress-stats">
+          <div class="stat"><div class="stat-value" id="statStreak">0</div><div class="stat-label">Dias seguidos</div></div>
+          <div class="stat"><div class="stat-value" id="statPractice">0</div><div class="stat-label">Min. praticados</div></div>
+          <div class="stat"><div class="stat-value" id="statTasks">0</div><div class="stat-label">Tarefas</div></div>
+          <div class="stat"><div class="stat-value" id="statSongs">0</div><div class="stat-label">Músicas</div></div>
+          <div class="stat"><div class="stat-value" id="statLessons">0</div><div class="stat-label">Aulas</div></div>
+          <div class="stat"><div class="stat-value" id="statExercises">0</div><div class="stat-label">Exercícios</div></div>
+        </div>
+        <div class="weekly-chart" id="weeklyChart"></div>
+      </div>
+    </section>
+
+    <!-- AULAS -->
+    <section id="tab-lessons" class="tab-panel">
+      <h2>Aulas</h2>
+      <p class="muted">Conteúdo publicado pelo seu professor.</p>
+      <div id="aulas-admin-list"></div>
+    </section>
+
+    <!-- TUNER -->
+    <section id="tab-tuner" class="tab-panel">
+      <h2>Afinador Cromático</h2>
+      <p class="muted">Toque uma corda e veja a nota detectada. Afinação padrão: E A D G B E</p>
+      <div class="tuner-wrap">
+        <div class="tuner-display">
+          <div class="tuner-note" id="tunerNote">--</div>
+          <div class="tuner-frequency" id="tunerFreq">0.0 Hz</div>
+          <div class="tuner-meter">
+            <div class="tuner-scale">
+              <div class="tuner-tick" style="left:0%">♭</div>
+              <div class="tuner-tick" style="left:25%">-25</div>
+              <div class="tuner-tick" style="left:50%">0</div>
+              <div class="tuner-tick" style="left:75%">+25</div>
+              <div class="tuner-tick" style="left:100%">♯</div>
+            </div>
+            <div class="tuner-needle" id="tunerNeedle"></div>
+          </div>
+          <div class="tuner-status" id="tunerStatus">Aguardando áudio...</div>
+        </div>
+        <div class="string-buttons" id="stringButtons">
+          <button data-string="E2" data-freq="82.41">E (6ª)</button>
+          <button data-string="A2" data-freq="110.00">A (5ª)</button>
+          <button data-string="D3" data-freq="146.83">D (4ª)</button>
+          <button data-string="G3" data-freq="196.00">G (3ª)</button>
+          <button data-string="B3" data-freq="246.94">B (2ª)</button>
+          <button data-string="E4" data-freq="329.63">E (1ª)</button>
+        </div>
+        <div class="tuner-controls">
+          <button id="tunerStart" class="primary">Iniciar Microfone</button>
+          <button id="tunerStop" class="secondary" disabled>Parar</button>
+          <select id="tunerStandard">
+            <option value="standard">Padrão (E A D G B E)</option>
+            <option value="dropD">Drop D</option>
+            <option value="openG">Open G</option>
+            <option value="halfDown">Semitom abaixo</option>
+          </select>
+          <label class="checkbox">
+            <input type="checkbox" id="tunerSound" /> Som de referência
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- SONGS -->
+    <section id="tab-songs" class="tab-panel">
+      <h2>Músicas e Cifras</h2>
+      <p class="muted">26 músicas em 7 categorias. Clique em qualquer cifra pra ver o diagrama.</p>
+      <div class="song-controls">
+        <input type="search" id="songSearch" placeholder="Buscar música ou artista..." />
+        <select id="songFilter">
+          <option value="all">Todas categorias</option>
+          <option value="popular">Populares</option>
+          <option value="mpb">MPB</option>
+          <option value="rock">Rock</option>
+          <option value="sertanejo">Sertanejo</option>
+          <option value="gospel">Gospel</option>
+          <option value="bossa">Bossa Nova</option>
+          <option value="infantil">Infantil</option>
+        </select>
+        <button id="songAdd" class="secondary">+ Adicionar</button>
+      </div>
+      <div class="song-list" id="songList"></div>
+    </section>
+
+    <!-- THEORY -->
+    <section id="tab-theory" class="tab-panel">
+      <h2>Teoria Musical</h2>
+      <div class="theory-tabs">
+        <button class="theory-tab active" data-topic="notes">Notas</button>
+        <button class="theory-tab" data-topic="chords">Acordes</button>
+        <button class="theory-tab" data-topic="scales">Escalas</button>
+        <button class="theory-tab" data-topic="chordProgressions">Campo Harmônico</button>
+        <button class="theory-tab" data-topic="chordReading">Lendo Cifras</button>
+        <button class="theory-tab" data-topic="tab">Tablatura</button>
+      </div>
+      <div class="theory-content" id="theoryContent"></div>
+    </section>
+
+    <!-- EXERCISES -->
+    <section id="tab-exercises" class="tab-panel">
+      <h2>Exercícios</h2>
+      <div class="level-filter">
+        <button class="filter-btn active" data-level="all">Todos</button>
+        <button class="filter-btn" data-level="beginner">Iniciante</button>
+        <button class="filter-btn" data-level="intermediate">Intermediário</button>
+        <button class="filter-btn" data-level="advanced">Avançado</button>
+      </div>
+      <div class="exercise-list" id="exerciseList"></div>
+    </section>
+
+    <!-- TASKS -->
+    <section id="tab-tasks" class="tab-panel">
+      <h2>Tarefas e Prática</h2>
+      <div class="task-add">
+        <input type="text" id="taskInput" placeholder="Nova tarefa..." />
+        <select id="taskCategory">
+          <option value="study">Estudo</option>
+          <option value="practice">Prática</option>
+          <option value="repertoire">Repertório</option>
+          <option value="theory">Teoria</option>
+        </select>
+        <input type="date" id="taskDate" />
+        <button id="taskAddBtn" class="primary">+ Adicionar</button>
+      </div>
+      <div class="task-filters">
+        <button class="task-filter active" data-filter="pending">Pendentes</button>
+        <button class="task-filter" data-filter="done">Concluídas</button>
+        <button class="task-filter" data-filter="all">Todas</button>
+      </div>
+      <div class="task-list" id="taskList"></div>
+    </section>
+
+    <!-- RITMOS (CAIXA DE RITMOS) -->
+    <section id="tab-ritmos" class="tab-panel">
+      <h2>🥁 Caixa de Ritmos</h2>
+      <p class="muted">Pratique com ritmos pré-definidos. Liga/desliga peças, ajuste o BPM.</p>
+      <div id="ritmos-content"></div>
+    </section>
+
+
+  </main>
+
+  <!-- MODAIS -->
+  <div class="modal" id="chordModal" hidden>
+    <div class="modal-content">
+      <button class="modal-close" data-close>&times;</button>
+      <h2 id="chordTitle"></h2>
+      <div class="chord-diagram" id="chordDiagram"></div>
+      <div class="chord-info" id="chordInfo"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="songModal" hidden>
+    <div class="modal-content wide">
+      <button class="modal-close" data-close>&times;</button>
+      <h2 id="songTitle"></h2>
+      <div class="song-meta" id="songMeta"></div>
+      <div class="song-controls-bar">
+        <label>Tom: <select id="songKey"></select></label>
+        <label>Capo: <select id="songCapo"><option value="0">Sem capo</option></select></label>
+        <button id="songMetronome" class="secondary">⏱️ Metrônomo</button>
+        <button id="songAutoscroll" class="secondary">📜 Auto-scroll</button>
+      </div>
+      <div class="song-lyrics" id="songLyrics"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="metronomeModal" hidden>
+    <div class="modal-content">
+      <button class="modal-close" data-close>&times;</button>
+      <h2>Metrônomo</h2>
+      <div class="metronome-display" id="metroDisplay">120</div>
+      <div class="metro-label">BPM</div>
+      <input type="range" id="metroBpm" min="40" max="240" value="120" />
+      <div class="metro-beats">
+        <label>Batidas por compasso:
+          <select id="metroBeats">
+            <option value="2">2/4</option>
+            <option value="3">3/4</option>
+            <option value="4" selected>4/4</option>
+            <option value="6">6/8</option>
+          </select>
+        </label>
+      </div>
+      <div class="metro-buttons">
+        <button id="metroStart" class="primary">▶ Iniciar</button>
+        <button id="metroStop" class="secondary" disabled>■ Parar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="addSongModal" hidden>
+    <div class="modal-content">
+      <button class="modal-close" data-close>&times;</button>
+      <h2>Adicionar Música</h2>
+      <form id="addSongForm">
+        <label>Título: <input type="text" name="title" required /></label>
+        <label>Artista: <input type="text" name="artist" required /></label>
+        <label>Categoria:
+          <select name="category">
+            <option value="popular">Popular</option>
+            <option value="mpb">MPB</option>
+            <option value="rock">Rock</option>
+            <option value="sertanejo">Sertanejo</option>
+            <option value="gospel">Gospel</option>
+            <option value="bossa">Bossa Nova</option>
+            <option value="infantil">Infantil</option>
+          </select>
+        </label>
+        <label>Tom original: <select name="key"></select></label>
+        <label>BPM: <input type="number" name="bpm" value="120" /></label>
+        <label>Cifra (cole aqui, com acordes entre colchetes [Am] etc.):
+          <textarea name="lyrics" rows="10" required></textarea>
+        </label>
+        <button type="submit" class="primary">Salvar</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="qrcodeModal" hidden>
+    <div class="modal-content" style="text-align:center">
+      <button class="modal-close" data-close>&times;</button>
+      <h2>📱 Instalar no Celular</h2>
+      <p class="muted" style="margin-bottom:16px">Aponte a câmera do celular para o QR Code</p>
+      <div id="qrcodeContainer" style="display:flex;justify-content:center;background:#fff;padding:16px;border-radius:8px;margin:0 auto 16px;max-width:280px"></div>
+      <input type="text" id="appUrl" readonly style="width:100%;text-align:center;font-size:12px" />
+      <button id="copyUrlBtn" class="primary" style="margin-top:10px">📋 Copiar Link</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="js/sonare-data.js"></script>
+<script src="js/ritmos.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/firebase-sync.js"></script>
+<script src="js/db.js"></script>
+<script src="js/conteudo.js"></script>
+<script src="js/tuner.js"></script>
+<script src="js/metronome.js"></script>
+<script src="js/theory.js"></script>
+<script src="js/songs.js"></script>
+<script src="js/exercises.js"></script>
+<script src="js/lessons.js"></script>
+<script src="js/tasks.js"></script>
+<script src="js/qrcode.js"></script>
+<script src="js/alarm.js"></script>
+<script src="js/app.js"></script>
+<script src="js/sonare-app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(r => console.log('SW registrado:', r.scope))
+        .catch(e => console.error('SW erro:', e));
+    });
+  }
+</script>
+</body>
+</html>

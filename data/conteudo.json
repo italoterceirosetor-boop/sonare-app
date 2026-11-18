@@ -1,0 +1,564 @@
+{
+  "version": "2026-08-17T18:41:25.386Z",
+  "teoria": {
+    "notes": {
+      "title": "Notas Musicais",
+      "html": "\n      <h3>As 12 notas da música ocidental</h3>\n      <p>A música ocidental utiliza 12 notas básicas, que se repetem em diferentes oitavas:</p>\n      <div class=\"chord-grid\" id=\"notesGrid\"></div>\n      <h4>Como memorizar</h4>\n      <p>Para iniciantes, as notas são representadas pelas letras A a G. As notas com sustenido (#) ou bemol (b) são chamadas de <strong>acidentes</strong>:</p>\n      <ul>\n        <li><strong>Sustenido (#)</strong>: sobe meio tom. Ex: C# é meio tom acima de C</li>\n        <li><strong>Bemol (b)</strong>: desce meio tom. Ex: Db é meio tom abaixo de D</li>\n        <li>C# = Db (mesma nota, escrita diferente - <em>enharmônica</em>)</li>\n      </ul>\n      <h4>Notas no violão</h4>\n      <p>As cordas soltas do violão (padrão) são afinadas em: <strong>E A D G B E</strong> (Mi Lá Ré Sol Si Mi), da 6ª (mais grossa) à 1ª (mais fina).</p>\n      <h4>Escala Cromática (todas as notas em sequência)</h4>\n      <p>C - C# - D - D# - E - F - F# - G - G# - A - A# - B - C</p>\n    "
+    },
+    "chords": {
+      "title": "Acordes",
+      "html": "\n      <h3>O que é um acorde?</h3>\n      <p>Um acorde é um conjunto de três ou mais notas tocadas simultaneamente. Os acordes mais comuns no violão são as <strong>tríades</strong> (3 notas): tônica, terça e quinta.</p>\n      <h4>Tipos principais</h4>\n      <ul>\n        <li><strong>Maior</strong>: som alegre, positivo (ex: C, G, D)</li>\n        <li><strong>Menor</strong>: som triste, melancólico (ex: Am, Dm, Em)</li>\n        <li><strong>Com 7ª</strong>: som jazzístico, tenso (ex: G7, C7)</li>\n        <li><strong>Suspenso (sus)</strong>: som indefinido, pede resolução (ex: Dsus4)</li>\n      </ul>\n      <h4>Acordes abertos essenciais</h4>\n      <p>Toque os acordes abaixo. São a base da maioria das músicas populares:</p>\n      <div class=\"chord-grid\" id=\"chordsGrid\"></div>\n      <h4>Como formar um acorde maior</h4>\n      <p>Exemplo: acorde de Dó Maior (C) = Dó + Mi + Sol. As notas são: C - E - G.</p>\n      <h4>Como formar um acorde menor</h4>\n      <p>Basta abaixar a terça meio tom. Exemplo: Dó menor (Cm) = C - D# - G.</p>\n    "
+    },
+    "scales": {
+      "title": "Escalas",
+      "html": "\n      <h3>O que é uma escala?</h3>\n      <p>Uma escala é uma sequência de notas em ordem ascendente ou descendente. As escalas formam a base da melodia e da improvisação.</p>\n      <h4>Escala Maior Natural</h4>\n      <p>Padrão de tons e semitons: T - T - St - T - T - T - St</p>\n      <p><strong>Exemplo em Dó Maior:</strong> C - D - E - F - G - A - B - C</p>\n      <h4>Escala Menor Natural</h4>\n      <p>Padrão: T - St - T - T - St - T - T</p>\n      <p><strong>Exemplo em Lá Menor:</strong> A - B - C - D - E - F - G - A</p>\n      <h4>Escala Pentatônica</h4>\n      <p>Possui apenas 5 notas. Muito usada em rock e blues. <strong>Pentatônica Maior:</strong> 1, 2, 3, 5, 6. <strong>Pentatônica Menor:</strong> 1, b3, 4, 5, b7.</p>\n      <h4>Escala de Blues</h4>\n      <p>É a pentatônica menor acrescida da nota blue (b5): 1, b3, 4, b5, 5, b7.</p>\n      <h4>Como aplicar no violão</h4>\n      <p>Pratique a escala de Dó Maior em todo o braço. Comece com a pentatônica, que é mais fácil e útil para solos.</p>\n      <div id=\"scalesGrid\"></div>\n    "
+    },
+    "chordProgressions": {
+      "title": "Campo Harmônico",
+      "html": "\n      <h3>Campo Harmônico Maior</h3>\n      <p>É o conjunto dos 7 acordes formados a partir de cada nota da escala maior. Os graus têm funções específicas:</p>\n      <h4>Graus do campo harmônico de Dó Maior</h4>\n      <ul>\n        <li><strong>I (C)</strong> - Tônica: centro, repouso</li>\n        <li><strong>ii (Dm)</strong> - Supertônica: preparação</li>\n        <li><strong>iii (Em)</strong> - Mediante: relativa</li>\n        <li><strong>IV (F)</strong> - Subdominante: movimento</li>\n        <li><strong>V (G)</strong> - Dominante: tensão</li>\n        <li><strong>vi (Am)</strong> - Submediante: relativa menor</li>\n        <li><strong>vii° (B°)</strong> - Sensível: resolução</li>\n      </ul>\n      <h4>Progressões mais comuns</h4>\n      <p>As progressões são a \"receita\" de como os acordes se conectam:</p>\n      <ul>\n        <li><strong>I - V - vi - IV</strong> (\"4 acordes nobres\"): super comum em pop</li>\n        <li><strong>ii - V - I</strong>: jazz, bossa nova</li>\n        <li><strong>I - vi - IV - V</strong>: anos 50, rock clássico</li>\n        <li><strong>vi - IV - I - V</strong>: pop moderno</li>\n      </ul>\n      <h4>Exemplos em diferentes tons</h4>\n      <div id=\"progressionGrid\"></div>\n    "
+    },
+    "chordReading": {
+      "title": "Lendo Cifras",
+      "html": "\n      <h3>O que é uma cifra?</h3>\n      <p>Cifra é uma forma simplificada de representar acordes. Em vez de escrever as notas, usamos símbolos como \"Am\", \"C7\", \"G/B\".</p>\n      <h4>Estrutura básica</h4>\n      <p><strong>[Nota][Acidente][Tipo][Extensão]/[Baixo]</strong></p>\n      <ul>\n        <li><strong>Nota</strong>: A, B, C, D, E, F, G</li>\n        <li><strong>Acidente</strong>: # (sustenido) ou b (bemol). Ex: F#, Bb</li>\n        <li><strong>Tipo</strong>: m (menor), 7, maj7, sus4, dim, aug</li>\n        <li><strong>Baixo</strong>: nota após a barra. Ex: C/E = C com Mi no baixo</li>\n      </ul>\n      <h4>Exemplos práticos</h4>\n      <ul>\n        <li><strong>C</strong> = Dó Maior</li>\n        <li><strong>Cm</strong> = Dó menor</li>\n        <li><strong>C7</strong> = Dó com sétima dominante</li>\n        <li><strong>Cmaj7</strong> = Dó maior com sétima maior</li>\n        <li><strong>Csus4</strong> = Dó com quarta suspensa</li>\n        <li><strong>C/E</strong> = Dó maior com Mi no baixo</li>\n        <li><strong>Cadd9</strong> = Dó com nona adicionada</li>\n      </ul>\n      <h4>Transposição</h4>\n      <p>Se você quer mudar o tom de uma música, basta somar a diferença. Ex: música em C, quer em D, suba 2 tons. Cada acorde sobe 2 semitons: C→D, Am→Bm, F→G.</p>\n      <h4>Notação de ritmo</h4>\n      <p>Em cifras, às vezes aparece \"/\" para indicar \"uma vez\" e \"/\" para continuar: \"C / / /\" = C por 4 batidas.</p>\n    "
+    },
+    "tab": {
+      "title": "Tablatura",
+      "html": "\n      <h3>O que é tablatura (TAB)?</h3>\n      <p>A tablatura é um sistema de notação específico para instrumentos de cordas. Mostra exatamente onde colocar os dedos no braço.</p>\n      <h4>Como ler</h4>\n      <p>É composta por 6 linhas horizontais (uma para cada corda). De cima para baixo:</p>\n      <ul>\n        <li>1ª linha: 1ª corda (Mi agudo, a mais fina)</li>\n        <li>2ª linha: 2ª corda (Si)</li>\n        <li>3ª linha: 3ª corda (Sol)</li>\n        <li>4ª linha: 4ª corda (Ré)</li>\n        <li>5ª linha: 5ª corda (Lá)</li>\n        <li>6ª linha: 6ª corda (Mi grave, a mais grossa)</li>\n      </ul>\n      <h4>Os números</h4>\n      <p>Os números nas linhas indicam o traste onde apertar a corda. 0 = corda solta.</p>\n      <h4>Exemplo de TAB</h4>\n      <pre style=\"background:#0f1729;padding:12px;border-radius:8px;font-family:monospace;color:#f4a261;\">\nE|--------0-----------0--------|\nB|------1---1-------1---1------|\nG|----0-------0---0-------0----|\nD|------------------------------|\nA|------------------------------|\nE|------------------------------|\n      </pre>\n      <p>Isso significa: 0 (corda solta Mi) - 1 (traste 1 do Si) - 0 (Sol solta) - 1 - 0 - 1 ...</p>\n      <h4>Símbolos comuns</h4>\n      <ul>\n        <li><strong>h</strong> = hammer-on (ex: 5h7 = martela do 5 para o 7)</li>\n        <li><strong>p</strong> = pull-off (ex: 7p5 = puxa do 7 para o 5)</li>\n        <li><strong>b</strong> = bend (ex: 7b9 = curva do 7 para o 9)</li>\n        <li><strong>/</strong> ou <strong>\\</strong> = slide (ex: 5/7 = desliza do 5 para o 7)</li>\n        <li><strong>x</strong> = não tocar a corda</li>\n      </ul>\n    "
+    }
+  },
+  "exercicios": [
+    {
+      "id": "ex1",
+      "title": "Esquentando os Dedos",
+      "level": "beginner",
+      "duration": "5 min",
+      "category": "Digitação",
+      "description": "Exercício básico para soltar os dedos e ganhar agilidade.",
+      "steps": [
+        "Coloque os dedos 1, 2, 3 e 4 nas cordas 2, 3 e 4 no primeiro traste",
+        "Toque cada dedo individualmente, um por um, em sequência",
+        "Mantenha o pulso relaxado e a mão firme",
+        "Repita o padrão 1-2-3-4 por 2 minutos",
+        "Agora inverta: 4-3-2-1 por mais 2 minutos",
+        "Tente fazer isso sem olhar para o braço"
+      ],
+      "tip": "Comece devagar. Velocidade vem com o tempo."
+    },
+    {
+      "id": "ex2",
+      "title": "Troca de Acordes C - G",
+      "level": "beginner",
+      "duration": "10 min",
+      "category": "Acordes",
+      "description": "Treine a mudança entre dois acordes fundamentais.",
+      "steps": [
+        "Forme o acorde de Dó (C) com a mão esquerda",
+        "Toque as 5 cordas uma vez cada (de cima para baixo)",
+        "Troque para o acorde de Sol (G)",
+        "Toque as 6 cordas uma vez cada",
+        "Alterne: C-G-C-G, devagar no início",
+        "Aumente a velocidade gradualmente",
+        "Mantenha um metrônomo em 60 BPM"
+      ],
+      "tip": "Não tire a mão do braço entre as trocas. Apenas mova os dedos."
+    },
+    {
+      "id": "ex3",
+      "title": "Pestana Simples (F)",
+      "level": "beginner",
+      "duration": "15 min",
+      "category": "Acordes",
+      "description": "Domine o acorde de Fá com pestana no primeiro traste.",
+      "steps": [
+        "Pressione todas as 6 cordas no primeiro traste com o dedo 1",
+        "Posicione os dedos 2, 3 e 4 nas cordas 3, 5 e 4 nos trastes 2 e 3",
+        "Toque cada corda individualmente para verificar se todas soam claras",
+        "Ajuste a pressão do polegar atrás do braço se necessário",
+        "Pratique transições F - C e F - G",
+        "Comece com pestana parcial (apenas 2-3 cordas) se necessário"
+      ],
+      "tip": "O polegar deve ficar atrás do braço, oposto aos outros dedos."
+    },
+    {
+      "id": "ex4",
+      "title": "Arpejo Simples",
+      "level": "beginner",
+      "duration": "8 min",
+      "category": "Ritmo",
+      "description": "Aprenda a tocar notas individuais em sequência.",
+      "steps": [
+        "Use o acorde de C (Dó)",
+        "Toque as cordas na ordem: 5ª, 3ª, 2ª, 1ª, 2ª, 3ª",
+        "Mantenha ritmo constante com metrônomo em 70 BPM",
+        "Use os dedos polegar (5ª), indicador (3ª), médio (2ª), anelar (1ª)",
+        "Repita o padrão continuamente",
+        "Experimente em outros acordes (G, Am, F)"
+      ],
+      "tip": "A mão direita deve fazer movimentos circulares, como se segurasse uma bolinha."
+    },
+    {
+      "id": "ex5",
+      "title": "Escala de Dó Maior",
+      "level": "intermediate",
+      "duration": "12 min",
+      "category": "Escalas",
+      "description": "Toque a escala de Dó maior no braço do violão.",
+      "steps": [
+        "Posicione o dedo 1 no traste 1 da 2ª corda (Dó)",
+        "Continue: traste 3 da 2ª (Ré), traste 5 da 3ª (Mi)",
+        "Desça: traste 5 da 1ª, traste 3 da 1ª, traste 1 da 1ª",
+        "Pratique em ambas as direções: ascendente e descendente",
+        "Aumente a velocidade progressivamente",
+        "Tente tocar com alternância de dedos (i-m, m-i)"
+      ],
+      "tip": "A escala de Dó não tem sustenidos ou bemóis, é a mais fácil."
+    },
+    {
+      "id": "ex6",
+      "title": "Dedilhado de Bossa Nova",
+      "level": "intermediate",
+      "duration": "15 min",
+      "category": "Ritmo",
+      "description": "Aprenda o padrão rítmico clássico da bossa nova.",
+      "steps": [
+        "Use o acorde de C (Dó)",
+        "Padrão: polegar-índice-médio-anelar-médio-indice",
+        "Tempo: J J J j j j (J = polegar, j = outros dedos)",
+        "Mantenha as palhetadas pares e constantes",
+        "Mude para G, Am, F7",
+        "Pratique com metrônomo em 120 BPM"
+      ],
+      "tip": "O polegar toca as cordas graves (4ª, 5ª, 6ª), os outros as agudas."
+    },
+    {
+      "id": "ex7",
+      "title": "Hammer-on e Pull-off",
+      "level": "intermediate",
+      "duration": "10 min",
+      "category": "Técnica",
+      "description": "Técnicas de legato para deixar o som mais fluido.",
+      "steps": [
+        "Hammer-on: toque uma nota e com força bata o dedo na mesma corda em um traste acima",
+        "Exemplo: traste 3 da 3ª corda, martele o traste 5 com o dedo médio",
+        "Pull-off: ao contrário, puxe o dedo para baixo",
+        "Exemplo: traste 5, puxe para traste 3",
+        "Alterne hammer-on e pull-off entre os mesmos trastes",
+        "Tente fazer com o metrônomo em 80 BPM"
+      ],
+      "tip": "O som deve ser claro, sem que a corda seja tocada duas vezes."
+    },
+    {
+      "id": "ex8",
+      "title": "Acordes com Pestano (Barre)",
+      "level": "intermediate",
+      "duration": "20 min",
+      "category": "Acordes",
+      "description": "Domine os acordes com pestana em diferentes posições.",
+      "steps": [
+        "Pratique F (Fá) - pestano no traste 1",
+        "Bm (Si menor) - pestano no traste 2",
+        "C#m (Dó# menor) - pestano no traste 4",
+        "F# (Fá#) - pestano no traste 2",
+        "Mantenha a pressão uniforme em todas as cordas",
+        "Verifique corda por corda se o som é limpo"
+      ],
+      "tip": "A chave é posicionar o dedo 1 bem rente ao traste, não no meio dele."
+    },
+    {
+      "id": "ex9",
+      "title": "Bends (Afinação)",
+      "level": "advanced",
+      "duration": "15 min",
+      "category": "Técnica",
+      "description": "Técnica de curvar a corda para alterar a afinação.",
+      "steps": [
+        "Toque a 3ª corda no traste 7 (nota Si)",
+        "Com os dedos 2 e 3, puxe a corda para cima",
+        "Tente chegar a nota Dó# (um tom acima)",
+        "Pratique bend de meio tom e um tom",
+        "Use os dedos 2 e 3 juntos para ter mais força",
+        "Tente bend na 1ª e 2ª cordas também"
+      ],
+      "tip": "O bend deve ser firme e constante. Não solte bruscamente."
+    },
+    {
+      "id": "ex10",
+      "title": "Vibrato",
+      "level": "advanced",
+      "duration": "10 min",
+      "category": "Técnica",
+      "description": "Adicione expressão às suas notas com vibrato.",
+      "steps": [
+        "Toque uma nota aguda (ex: traste 12 da 1ª corda)",
+        "Mova o dedo levemente para cima e para baixo rapidamente",
+        "O movimento deve vir do pulso, não do dedo",
+        "Mantenha a pressão constante",
+        "Pratique diferentes intensidades de vibrato",
+        "Combine vibrato com bends"
+      ],
+      "tip": "Bom vibrato é o que diferencia amadores de profissionais."
+    },
+    {
+      "id": "ex11",
+      "title": "Tapping",
+      "level": "advanced",
+      "duration": "20 min",
+      "category": "Técnica",
+      "description": "Técnica avançada de tocar com ambas as mãos no braço.",
+      "steps": [
+        "Mão direita: dedos médio e indicador no braço",
+        "Mão esquerda: dedos no braço também",
+        "Comece com um padrão simples: 5-7-12-7-5-7-12",
+        "Mantenha o ritmo firme com metrônomo",
+        "Aumente a velocidade aos poucos",
+        "Experimente padrões mais complexos"
+      ],
+      "tip": "O tapping exige muita coordenação. Pratique devagar primeiro."
+    },
+    {
+      "id": "ex12",
+      "title": "Palhetada Alternada",
+      "level": "intermediate",
+      "duration": "10 min",
+      "category": "Técnica",
+      "description": "Treine velocidade com palhetada alternada.",
+      "steps": [
+        "Use uma palheta (plectro)",
+        "Alterne para baixo e para cima continuamente",
+        "Comece com a palheta em uma única corda",
+        "Mantenha metrônomo em 100 BPM",
+        "Aumente para 120, 140, 160 BPM gradualmente",
+        "Aplique o padrão em uma escala"
+      ],
+      "tip": "O movimento deve vir do punho, não do braço todo."
+    }
+  ],
+  "licoes": [
+    {
+      "id": "l1",
+      "level": "beginner",
+      "order": 1,
+      "title": "1. Conhecendo o Violão",
+      "duration": "15 min",
+      "summary": "Partes do violão, postura correta, como segurar o instrumento",
+      "content": "\n<h3>Bem-vindo ao mundo do violão!</h3>\n<p>Antes de tocar qualquer nota, você precisa conhecer o instrumento e aprender a postura correta. Isso evita dores e lesões, além de melhorar o som.</p>\n\n<h4>Partes do Violão</h4>\n<ul>\n<li><strong>Corpo (bojo)</strong>: a caixa de ressonância. É onde sai o som amplificado.</li>\n<li><strong>Braço (escala)</strong>: a parte longa onde ficam os trastes e você coloca os dedos.</li>\n<li><strong>Trastes</strong>: as barras de metal no braço. Cada traste representa um semitom.</li>\n<li><strong>Cordas</strong>: 6 cordas. Da mais grossa (6ª, Mi grave) à mais fina (1ª, Mi agudo).</li>\n<li><strong>Tarraxas (cravelhas)</strong>: onde você afina o violão. Gire para apertar/afinar.</li>\n<li><strong>Pestana (Nut)</strong>: a parte branca no topo do braço, antes do 1º traste.</li>\n<li><strong>Rastilho (Ponte)</strong>: onde as cordas se fixam no corpo.</li>\n<li><strong>Palheta/Plectro</strong>: opcional, usado para rasgar cordas.</li>\n</ul>\n\n<h4>Postura Correta (Sentado)</h4>\n<ol>\n<li>Sente-se em uma cadeira firme, sem braços. A coluna deve ficar reta, sem curvar.</li>\n<li>Coloque a cintura do violão sobre a perna direita (se canhoto, inverta).</li>\n<li>A coxa deve estar levemente inclinada para baixo, para que o braço do violão suba em ângulo.</li>\n<li>As costas do violão encostam levemente no peito/barriga.</li>\n<li>Os pés apoiados no chão, paralelos.</li>\n<li>O ombro esquerdo relaxado, sem tensão.</li>\n</ol>\n\n<h4>Postura em Pé (com correia)</h4>\n<ul>\n<li>A altura ideal: o braço do violão fica paralelo ao chão.</li>\n<li>Ajuste a correia para que o violão fique em uma altura confortável para tocar.</li>\n</ul>\n\n<h4>Posição das Mãos</h4>\n<p><strong>Mão direita (tocante):</strong></p>\n<ul>\n<li>Polegar: responsável pelas cordas graves (4ª, 5ª, 6ª).</li>\n<li>Indicador (i), Médio (m), Anelar (a): responsáveis pelas cordas agudas (3ª, 2ª, 1ª).</li>\n<li>Mindinho: geralmente não é usado, apoia na boca do violão.</li>\n</ul>\n\n<p><strong>Mão esquerda (fretadora):</strong></p>\n<ul>\n<li>Polegar atrás do braço, oposto ao dedo indicador (1).</li>\n<li>Dedos curvados, como se estivessem segurando uma bolinha pequena.</li>\n<li>A ponta dos dedos (não a parte de baixo) aperta a corda, bem rente ao traste.</li>\n</ul>\n\n<h4>💡 Dica de ouro</h4>\n<p>A pressão dos dedos no braço deve ser firme, mas sem tensão. Se seus dedos ficam brancos ou doloridos, você está apertando demais. Relaxe a mão e respire.</p>\n    "
+    },
+    {
+      "id": "l2",
+      "level": "beginner",
+      "order": 2,
+      "title": "2. Acordes Básicos (Em, Am, G, C, D)",
+      "duration": "30 min",
+      "summary": "Os 5 acordes essenciais que abrem 80% das músicas",
+      "content": "\n<h3>Os 5 Acordes Essenciais</h3>\n<p>Domine estes 5 acordes e você conseguirá tocar a grande maioria das músicas populares. São eles: <strong>Em, Am, G, C e D</strong>.</p>\n\n<h4>1. Em (Mi Menor) - O mais fácil</h4>\n<p>Dedos: 2 na 5ª corda (2º traste), 3 na 4ª corda (2º traste). As outras cordas soltas.</p>\n<ul><li>É o primeiro acorde que todo iniciante aprende.</li><li>Toca as 6 cordas.</li></ul>\n\n<h4>2. Am (Lá Menor)</h4>\n<p>Dedos: 1 na 2ª corda (1º traste), 2 na 3ª corda (2º traste), 3 na 4ª corda (2º traste). A 5ª e 6ª cordas soltas. A 1ª não toca.</p>\n<ul><li>Som melancólico, muito usado em baladas.</li></ul>\n\n<h4>3. G (Sol Maior)</h4>\n<p>Dedos: 1 na 5ª corda (2º traste), 2 na 6ª corda (3º traste), 3 na 1ª corda (3º traste). As outras cordas soltas.</p>\n<ul><li>Um dos mais importantes. Toca as 6 cordas.</li></ul>\n\n<h4>4. C (Dó Maior)</h4>\n<p>Dedos: 1 na 2ª corda (1º traste), 2 na 4ª corda (2º traste), 3 na 5ª corda (3º traste). A 6ª não toca. A 3ª solta.</p>\n<ul><li>Som alegre, brilhante.</li></ul>\n\n<h4>5. D (Ré Maior)</h4>\n<p>Dedos: 1 na 3ª corda (2º traste), 2 na 2ª corda (3º traste), 3 na 1ª corda (2º traste). A 4ª, 5ª e 6ª cordas não tocam.</p>\n<ul><li>Apenas 4 cordas, som aveludado.</li></ul>\n\n<h4>Como Treinar a Troca de Acordes</h4>\n<ol>\n<li>Forme um acorde (ex: Em) e toque as cordas uma vez.</li>\n<li>Troque para outro (ex: Am) SEM tirar a mão do braço, só movimente os dedos.</li>\n<li>Toque o segundo acorde.</li>\n<li>Volte para o primeiro. Repita 10 vezes.</li>\n<li>Agora troque para um terceiro acorde. Continue a sequência.</li>\n</ol>\n\n<h4>Sequência Recomendada de Estudo</h4>\n<ol>\n<li>Aprenda Em → pratique 2 dias</li>\n<li>Adicione Am → pratique 2 dias</li>\n<li>Adicione G → pratique 2 dias</li>\n<li>Adicione C → pratique 3 dias</li>\n<li>Adicione D → pratique 3 dias</li>\n<li>Comece a tocar músicas simples que usem esses 5</li>\n</ol>\n\n<h4>💡 Dica</h4>\n<p>Não tire a mão do braço entre as trocas. Os dedos devem deslizar/movimentar mantendo sempre alguma parte em contato com as cordas. Isso é mais rápido e eficiente.</p>\n    "
+    },
+    {
+      "id": "l3",
+      "level": "beginner",
+      "order": 3,
+      "title": "3. Como Ler Cifras",
+      "duration": "20 min",
+      "summary": "Interpretando cifras em qualquer música ou site de cifras",
+      "content": "\n<h3>Decifrando o Código</h3>\n<p>Cifra é uma forma simplificada de representar acordes em uma música. Vamos aprender a ler!</p>\n\n<h4>Estrutura Básica</h4>\n<p>Uma cifra segue o formato: <strong>[Nota][Acidente][Tipo][Extensão]</strong></p>\n\n<h4>Letras das Notas</h4>\n<ul>\n<li><strong>A</strong> = Lá</li>\n<li><strong>B</strong> = Si</li>\n<li><strong>C</strong> = Dó</li>\n<li><strong>D</strong> = Ré</li>\n<li><strong>E</strong> = Mi</li>\n<li><strong>F</strong> = Fá</li>\n<li><strong>G</strong> = Sol</li>\n</ul>\n\n<h4>Acidentes</h4>\n<ul>\n<li><strong># (sustenido)</strong>: sobe meio tom. Ex: F# = Fá sustenido</li>\n<li><strong>b (bemol)</strong>: desce meio tom. Ex: Bb = Si bemol</li>\n</ul>\n\n<h4>Tipos de Acorde</h4>\n<ul>\n<li><strong>Sem sufixo</strong>: Maior (C = Dó Maior)</li>\n<li><strong>m</strong>: Menor (Cm = Dó menor)</li>\n<li><strong>7</strong>: Com 7ª dominante (C7)</li>\n<li><strong>maj7</strong>: Com 7ª maior (Cmaj7)</li>\n<li><strong>sus4</strong>: 4ª suspensa (Csus4)</li>\n<li><strong>add9</strong>: 9ª adicionada (Cadd9)</li>\n</ul>\n\n<h4>Como Ler na Prática</h4>\n<p>Em uma cifra, os acordes aparecem em cima da letra, indicando onde trocar:</p>\n<pre style=\"background:#0f1729;padding:12px;border-radius:8px;font-family:monospace;color:#f4a261\">\n         C        G\n   Subiu o morro, a lua clareou\n         Am       F\n   E o sertão inteiro acordou\n</pre>\n<p>Aqui, no início de cada frase, você troca para o acorde indicado.</p>\n\n<h4>Como Ler Repetições</h4>\n<p>Quando um acorde fica por várias batidas, às vezes aparece assim:</p>\n<ul>\n<li><strong>C / / /</strong> = C por 4 batidas</li>\n<li><strong>C / /</strong> = C por 3 batidas</li>\n</ul>\n\n<h4>Seção [Intro], [Verso], [Refrão]</h4>\n<p>Essas marcações indicam partes da música. Use a mesma sequência de acordes para cada verso, e geralmente o refrão tem acordes próprios.</p>\n\n<h4>💡 Dica</h4>\n<p>Quando encontrar um acorde que não conhece, use o <strong>diagrama de acordes</strong> no app. Toque em qualquer cifra na seção de Músicas para ver o diagrama!</p>\n    "
+    },
+    {
+      "id": "l4",
+      "level": "beginner",
+      "order": 4,
+      "title": "4. Ritmos Básicos (Batida)",
+      "duration": "25 min",
+      "summary": "Os 3 ritmos mais usados: batida simples, valsinha e bossa",
+      "content": "\n<h3>O Coração da Música: O Ritmo</h3>\n<p>Acordes corretos com ritmo ruim = música sem graça. Acordes simples com bom ritmo = música que agrada. Por isso, treine ritmo muito!</p>\n\n<h4>1. Batida Simples (Pop/Rock)</h4>\n<p>É o ritmo mais usado. Mão direita faz movimento para baixo e para cima alternado.</p>\n<p><strong>Contagem: 1 2 3 4 | 1 2 3 4</strong></p>\n<p><strong>Direção: ↓ ↑ ↓ ↑ | ↓ ↑ ↓ ↑</strong></p>\n<ul>\n<li>↓ = palhetada para baixo (toca todas as cordas do acorde)</li>\n<li>↑ = palhetada para cima (toca as cordas agudas)</li>\n</ul>\n\n<h4>2. Valsinha (3/4)</h4>\n<p>Usada em músicas como \"Parabéns pra Você\", \"Happy Birthday\", \"Asa Branca\".</p>\n<p><strong>Contagem: 1 2 3 | 1 2 3</strong></p>\n<p><strong>Direção: ↓ ↑ ↓ | ↓ ↑ ↓</strong></p>\n<p>O movimento é mais \"saltitante\", com pausa no terceiro tempo.</p>\n\n<h4>3. Bossa Nova (Simplificada)</h4>\n<p>Ritmo brasileiro sofisticado, com síncope característica.</p>\n<p><strong>Contagem em 4/4: 1 e 2 e 3 e 4 e</strong></p>\n<p><strong>Direção: ↓ . ↑ ↑ . ↑ ↓ .</strong></p>\n<p>Onde \".\" = pausa e \"↑ ↓\" = palhetadas mais rápidas. Treine devagar!</p>\n\n<h4>Como Praticar</h4>\n<ol>\n<li>Escolha uma música fácil (ex: \"Asa Branca\" para valsinha)</li>\n<li>Use o <strong>metrônomo</strong> do app em 60-80 BPM</li>\n<li>Toque a batida SEM trocar de acorde primeiro. Só o ritmo.</li>\n<li>Quando o ritmo estiver firme, adicione a troca de acordes</li>\n<li>Aumente o BPM gradualmente (10 BPM por semana)</li>\n</ol>\n\n<h4>Dica Importante: A Mão</h4>\n<p>Use o punho, não o braço todo. O movimento é do pulso, relaxado, como se estivesse batendo numa mesa com as costas da mão.</p>\n    "
+    },
+    {
+      "id": "l5",
+      "level": "beginner",
+      "order": 5,
+      "title": "5. Dedilhado Básico",
+      "duration": "20 min",
+      "summary": "Tocando notas individuais: arpejo simples com 4 dedos",
+      "content": "\n<h3>Dedilhado: Tocando Corda por Corda</h3>\n<p>Em vez de tocar todas as cordas juntas, no dedilhado você toca uma de cada vez, criando um efeito mais delicado. Muito usado em MPB, bossa nova, e baladas.</p>\n\n<h4>Arpejo com 4 Dedos (i-m-a)</h4>\n<p>Use os dedos da mão direita: indicador (i), médio (m), anelar (a), e o polegar (p) para as cordas graves.</p>\n\n<h4>Padrão Mais Comum (4 batidas por compasso)</h4>\n<p>Para um acorde de C (Dó):</p>\n<ol>\n<li>5ª corda com o POLEGAR (Lá)</li>\n<li>3ª corda com o INDICADOR (Dó)</li>\n<li>2ª corda com o MÉDIO (Mi)</li>\n<li>1ª corda com o ANELAR (Sol)</li>\n<li>3ª corda com o MÉDIO (Dó)</li>\n<li>2ª corda com o INDICADOR (Mi)</li>\n</ol>\n<p>Isso forma o arpejo: <strong>5 - 3 - 2 - 1 - 2 - 3</strong> (em numeração de cordas)</p>\n\n<h4>Para Outros Acordes</h4>\n<ul>\n<li><strong>G (Sol)</strong>: 6ª - 3ª - 2ª - 1ª - 2ª - 3ª (polegar usa a 6ª)</li>\n<li><strong>Am (Lá menor)</strong>: 5ª - 3ª - 2ª - 1ª - 2ª - 3ª (igual a C)</li>\n<li><strong>D (Ré)</strong>: 4ª - 3ª - 2ª - 1ª - 2ª - 3ª (polegar usa a 4ª)</li>\n</ul>\n\n<h4>Como Praticar</h4>\n<ol>\n<li>Comece com metrônomo em 50 BPM</li>\n<li>Toque cada nota bem destacada, sem pressa</li>\n<li>Mantenha o polegar numa posição fixa (não \"ande\" com ele)</li>\n<li>Os dedos i, m, a devem ficar curvados, como se estivessem segurando uma bolinha</li>\n<li>Aumente o BPM aos poucos: 60, 70, 80, 90...</li>\n</ol>\n\n<h4>Erros Comuns</h4>\n<ul>\n<li>Tocar com a mão toda rígida → mantenha relaxado</li>\n<li>Usar dedo errado (i em vez de m) → pratique nomeando cada dedo em voz alta</li>\n<li>Não ouvir as notas separadas → foque em cada som</li>\n</ul>\n\n<h4>💡 Dica</h4>\n<p>Esse dedilhado é a base da Bossa Nova. Quando dominar, tente a versão completa (Padrão João Gilberto), que é mais complexa mas tem o suingue brasileiro inconfundível.</p>\n    "
+    },
+    {
+      "id": "l6",
+      "level": "intermediate",
+      "order": 6,
+      "title": "6. Pestana (Barre) - Dominando F e Bm",
+      "duration": "40 min",
+      "summary": "A técnica mais desafiadora para iniciantes: pestano",
+      "content": "\n<h3>Pestano: O Salto do Intermediário</h3>\n<p>O pestano é o que separa o iniciante do intermediário. É quando você usa o dedo indicador para pressionar TODAS as 6 cordas em um mesmo traste. O acorde de Fá (F) é o exemplo mais clássico.</p>\n\n<h4>Por que é difícil?</h4>\n<ul>\n<li>Você precisa pressionar 6 cordas com 1 dedo</li>\n<li>Requer mais força e posicionamento preciso</li>\n<li>Algumas cordas podem \"abafar\" (não soar) se a pressão não for uniforme</li>\n</ul>\n\n<h4>Como Formar o F (Fá Maior)</h4>\n<ol>\n<li><strong>Dedo 1 (indicador)</strong>: faz o pestano no 1º traste (todas as 6 cordas)</li>\n<li><strong>Dedo 2 (médio)</strong>: 3ª corda, 2º traste</li>\n<li><strong>Dedo 3 (anelar)</strong>: 5ª corda, 3º traste</li>\n<li><strong>Dedo 4 (mínimo)</strong>: 4ª corda, 3º traste</li>\n</ol>\n\n<h4>Posicionamento Correto</h4>\n<ul>\n<li>O dedo 1 deve ficar bem <strong>rente ao traste</strong> (não no meio dele, mais perto do traste 2)</li>\n<li>O <strong>polegar</strong> atrás do braço, oposto ao indicador. Pressione para baixo com a mão esquerda, contra o polegar.</li>\n<li>Posicione o indicador levemente inclinado, de modo que a parte mais carnuda fique sobre as cordas graves</li>\n</ul>\n\n<h4>Exercício Progressivo</h4>\n<ol>\n<li>Comece com pestano <strong>parcial</strong> (apenas 2-3 cordas) - Ex: 1ª, 2ª e 3ª cordas apenas</li>\n<li>Forme o F, mas tire as cordas que não estão sendo pressionadas - 4ª, 5ª, 6ª</li>\n<li>Toque cada corda individualmente para ver quais soam claras</li>\n<li>Adicione uma corda por vez até completar as 6</li>\n</ol>\n\n<h4>Outros Acordes com Pestano Importantes</h4>\n<ul>\n<li><strong>Bm (Si menor)</strong>: pestano no 2º traste</li>\n<li><strong>C#m (Dó# menor)</strong>: pestano no 4º traste</li>\n<li><strong>F# (Fá#)</strong>: pestano no 2º traste</li>\n</ul>\n<p>A regra é: <strong>qualquer acorde \"aberto\" pode ser movido para um traste com pestano</strong>. Por exemplo, o \"E\" (Mi) virando \"F\" (Fá) com pestano no 1º traste. Esse é um truque poderoso!</p>\n\n<h4>Truque do Capo</h4>\n<p>Se tiver um <strong>capo</strong> (ou usar a pestano virtual do app), você pode simplificar: coloque o capo no 1º traste e toque os acordes de E como se fossem F. Capo no 2º = F#, no 3º = G, etc.</p>\n\n<h4>💡 Dica</h4>\n<p>Não desanime se demorar! Muitos levam 2-3 meses para dominar o pestano perfeitamente. O segredo é a persistência e a posição do polegar. Se sentir dor, pare e descanse.</p>\n    "
+    },
+    {
+      "id": "l7",
+      "level": "intermediate",
+      "order": 7,
+      "title": "7. Escala Pentatônica e Improvisação",
+      "duration": "45 min",
+      "summary": "Base para tirar solos de rock, blues e pop",
+      "content": "\n<h3>A Escala Mágica: Pentatônica</h3>\n<p>Se você quer tirar solos (melodias improvisadas), a escala pentatônica é o lugar para começar. É usada em 90% dos solos de rock, blues, pop e até MPB.</p>\n\n<h4>O que é \"Pentatônica\"?</h4>\n<p>Significa \"5 notas\" (penta = cinco). É uma escala simplificada que soa bem em quase qualquer acorde.</p>\n\n<h4>Pentatônica de Sol Menor (1ª posição)</h4>\n<p>Esta é a mais usada em rock e blues. Começa no traste 3 da 6ª corda (nota Sol).</p>\n\n<p><strong>Padrão no braço:</strong></p>\n<pre style=\"background:#0f1729;padding:12px;border-radius:8px;font-family:monospace;color:#f4a261\">\n6ª corda:  3 - 5\n5ª corda:  3 - 5\n4ª corda:  2 - 5\n3ª corda:  2 - 4\n2ª corda:  3 - 5\n1ª corda:  3 - 5\n</pre>\n<p>Cada número é o traste. Toca em sequência: 3-5-3-5-2-5-2-4-3-5-3-5 (repetindo).</p>\n\n<h4>As 5 Notas (em Sol)</h4>\n<p>G (Sol) - Bb (Si bemol) - C (Dó) - D (Ré) - F (Fá)</p>\n\n<h4>Como Improvisar</h4>\n<ol>\n<li>Coloque um <strong>backing track</strong> (faixa de apoio) em Sol menor. Tem vários gratuitos no YouTube.</li>\n<li>Toque as notas da pentatônica em qualquer ordem, no ritmo que quiser</li>\n<li>Comece devagar, ouça o que soa bem</li>\n<li>Experimente voltar sempre à nota Sol (a \"tônica\") - isso dá sensação de \"chegada\"</li>\n<li>Tente \"responder\" musicalmente ao que está ouvindo</li>\n</ol>\n\n<h4>Técnicas Para Dar Vida ao Solo</h4>\n<ul>\n<li><strong>Bend</strong>: puxe a corda para alterar a afinação. Ex: 3 → 5 com bend vira 3 → 6</li>\n<li><strong>Hammer-on</strong>: toque uma nota e bata o dedo em um traste acima (h)</li>\n<li><strong>Pull-off</strong>: puxe o dedo de um traste para o anterior (p)</li>\n<li><strong>Vibrato</strong>: oscile o dedo levemente para dar \"emoção\" à nota</li>\n<li><strong>Slide</strong>: deslize de um traste para outro (/ ou \\)</li>\n</ul>\n\n<h4>Backing Tracks Recomendados</h4>\n<p>Procure no YouTube: \"backing track G minor\", \"backing track blues in G\", \"backing track rock in A minor\". Comece com os lentos (60-80 BPM).</p>\n\n<h4>💡 Dica</h4>\n<p>Improvisação não é talento nato - é vocabulário. Quanto mais você ouvir e copiar solos de outros guitarristas, mais frases você terá na \"biblioteca\" para usar.</p>\n    "
+    },
+    {
+      "id": "l8",
+      "level": "intermediate",
+      "order": 8,
+      "title": "8. Tocar de Ouvido",
+      "duration": "60 min",
+      "summary": "Tirar músicas sem cifras: técnica essencial para qualquer músico",
+      "content": "\n<h3>A Habilidade Definitiva: Tocar de Ouvido</h3>\n<p>Com o tempo, você vai querer tocar músicas que ainda não têm cifra disponível, ou criar suas próprias versões. Saber tirar de ouvido é fundamental.</p>\n\n<h4>Passo 1: Identifique o Tom</h4>\n<p>Use o afinador ou o app: descubra qual é a nota mais grave que aparece na música. Geralmente é a tônica (nota principal).</p>\n<ul>\n<li>Se a música \"termina\" em G, provavelmente é em G (Sol Maior ou Sol menor)</li>\n<li>Toque notas no braço até achar a que \"combina\" com o final da música</li>\n</ul>\n\n<h4>Passo 2: Encontre os Acordes (Batida)</h4>\n<ol>\n<li>Escute a música e cante junto</li>\n<li>Quando sentir uma \"mudança\" de acorde (geralmente a cada 1-4 batidas), pause</li>\n<li>Tente descobrir qual acorde é. Comece testando: I, IV, V, vi (em relação ao tom que você descobriu)</li>\n<li>Se a música está em C, teste: C, F, G, Am</li>\n</ul>\n\n<h4>Passo 3: Identifique o Ritmo</h4>\n<p>É batida, valsinha, bossa, reggae? Bata a mão na perna acompanhando a música pra sentir o pulso.</p>\n\n<h4>Passo 4: Monte a Forma dos Acordes</h4>\n<ul>\n<li><strong>Verso 1, 2, 3</strong>: geralmente têm a mesma sequência de acordes</li>\n<li><strong>Refrão</strong>: tem uma sequência diferente (mais marcante)</li>\n<li><strong>Bridge</strong>: pode ter uma sequência única</li>\n</ul>\n\n<h4>Passo 5: Adicione Detalhes</h4>\n<ul>\n<li>Variações de dedilhado</li>\n<li>Acordes com pestano em vez de abertos</li>\n<li>Notas de passagem entre os acordes</li>\n<li>Introdução (geralmente os primeiros acordes do verso)</li>\n</ul>\n\n<h4>Truque: Apps e Ferramentas</h4>\n<ul>\n<li><strong>Moises</strong>: detecta acordes automaticamente de qualquer áudio (com IA)</li>\n<li><strong>YouTube</strong>: diminua a velocidade (0.75x ou 0.5x) para entender partes difíceis</li>\n<li><strong>Afinador do app</strong>: identifique tons e notas isoladas</li>\n</ul>\n\n<h4>Exercício Prático</h4>\n<ol>\n<li>Pegue uma música simples que você goste mas que não tem cifra</li>\n<li>Escute 3-4 vezes prestando atenção na estrutura</li>\n<li>Identifique o tom (último acorde da música)</li>\n<li>Descubra a sequência do verso (geralmente 4 acordes)</li>\n<li>Teste cada acorde no braço</li>\n<li>Junte tudo e toque junto com a música</li>\n</ol>\n\n<h4>💡 Dica</h4>\n<p>Comece com músicas simples. As primeiras serão lentas, mas com prática você vai tirar uma música de ouvido em 15-30 minutos. É como um quebra-cabeça - e é MUITO gratificante quando dá certo!</p>\n    "
+    },
+    {
+      "id": "l9",
+      "level": "advanced",
+      "order": 9,
+      "title": "9. Harmonia Avançada - Substituição de Acordes",
+      "duration": "60 min",
+      "summary": "Como embelezar e sofisticar harmonias: tríades, extensões, tensões",
+      "content": "\n<h3>Além do Básico: Harmonia Sofisticada</h3>\n<p>Quando você já domina os acordes básicos e pestano, é hora de explorar harmonias mais ricas e interessantes. Esse é o território do jazz, MPB sofisticada e música instrumental.</p>\n\n<h4>1. Tríades</h4>\n<p>Tríade é a forma mais simples de acorde: 3 notas. No violão, podemos tocar tríades em diferentes posições para criar timbres variados.</p>\n\n<h4>Tríades na Forma CAGED</h4>\n<p>O sistema CAGED divide o braço em 5 regiões: C-A-G-E-D. Cada letra é a forma de um acorde aberto. Dominando essas formas, você pode tocar QUALQUER acorde em QUALQUER posição do braço.</p>\n\n<h4>2. Inversões de Acordes</h4>\n<p>Em vez de tocar a nota raiz no baixo, experimente começar com a terça ou quinta. Isso muda o som e a função do acorde.</p>\n<ul>\n<li><strong>C (Dó)</strong> = Dó-Mi-Sol (posição fundamental)</li>\n<li><strong>C/E</strong> = Mi-Sol-Dó (1ª inversão)</li>\n<li><strong>C/G</strong> = Sol-Dó-Mi (2ª inversão)</li>\n</ul>\n\n<h4>3. Acordes com Extensões</h4>\n<p>Acordes podem ter notas adicionais além da tônica, terça e quinta:</p>\n<ul>\n<li><strong>9ª (add9)</strong>: som etéreo, moderno. Ex: Cadd9 = C-E-G-D</li>\n<li><strong>7M (maj7)</strong>: som jazz, sofisticado. Ex: Cmaj7 = C-E-G-B</li>\n<li><strong>6ª (6)</strong>: retrô. Ex: C6 = C-E-G-A</li>\n<li><strong>11ª (11)</strong>: jazz fusion. Ex: Cm11</li>\n<li><strong>13ª (13)</strong>: jazz. Ex: C13</li>\n</ul>\n\n<h4>4. Acordes Suspensos (Sus)</h4>\n<ul>\n<li><strong>Sus2</strong>: substitui a terça pela 2ª. Som ambíguo, \"arejado\"</li>\n<li><strong>Sus4</strong>: substitui a terça pela 4ª. Som tenso, pede resolução</li>\n</ul>\n<p>Exemplo: Dsus4 → D (resolve a tensão)</p>\n\n<h4>5. Substituição de Acordes</h4>\n<p>Em harmonias avançadas, podemos substituir acordes por outros com função semelhante:</p>\n<ul>\n<li><strong>SubV (Sub-dominante)</strong>: trocar o V7 pelo bVII7. Ex: em C, G7 → F7</li>\n<li><strong>Acorde relativo menor</strong>: vi pode substituir I em alguns contextos</li>\n<li><strong>Diminuto passando</strong>: usar diminuto entre dois acordes para criar movimento</li>\n</ul>\n\n<h4>6. Acordes de Abertura (Slash Chords)</h4>\n<p>Quando aparece \"C/E\", significa acorde de C com a nota E no baixo. Isso muda a função harmônica.</p>\n<ul>\n<li><strong>G/B</strong>: acorde de G com B no baixo (preparação para C)</li>\n<li><strong>Am/G</strong>: Am com G no baixo (preparação para F)</li>\n</ul>\n\n<h4>7. Aplicação Prática: Como Tocar MPB/Bossa</h4>\n<ol>\n<li>Em vez de tocar acordes \"cheios\" (com pestano), use tríades</li>\n<li>Experimente inverter as posições - toque o acorde em região mais aguda do braço</li>\n<li>Adicione extensões em pontos estratégicos (geralmente em finais de frase)</li>\n<li>Use sus4 antes de resolver no acorde principal</li>\n</ol>\n\n<h4>Exercício: Jazz-ificar Uma Música Simples</h4>\n<p>Pegue \"Asa Branca\" e toque assim:</p>\n<ul>\n<li>Em vez de G → use Gmaj7 → G7</li>\n<li>Em vez de C → use C7M</li>\n<li>Em vez de D → use D7 → D7M9</li>\n<li>Adicione Dsus4 antes do D</li>\n</ul>\n<p>O resultado é uma versão mais sofisticada da mesma música.</p>\n\n<h4>💡 Dica</h4>\n<p>Estude grandes harmonistas: Tom Jobim, João Gilberto, Djavan, Milton Nascimento, Baden Powell. Aprenda as músicas deles e veja como usam essas técnicas.</p>\n    "
+    },
+    {
+      "id": "l10",
+      "level": "advanced",
+      "order": 10,
+      "title": "10. Composição - Criando Suas Próprias Músicas",
+      "duration": "90 min",
+      "summary": "O passo final: compor suas próprias canções",
+      "content": "\n<h3>Compondo Sua Primeira Música</h3>\n<p>Compor não é um dom misterioso - é uma habilidade que se aprende. Toda grande música que você conhece foi feita por alguém que um dia começou com 4 acordes e uma ideia.</p>\n\n<h4>Passo 1: Defina o Tom e a Emoção</h4>\n<p>Toda música tem uma emoção central. Pergunte-se:</p>\n<ul>\n<li>É alegre ou melancólica?</li>\n<li>É agitada ou calma?</li>\n<li>Qual a história que quero contar?</li>\n</ul>\n<p>Isso vai definir o tom (maior/menor), o BPM e a escolha de acordes.</p>\n\n<h4>Passo 2: Crie a Progressão de Acordes</h4>\n<p>Comece com uma progressão simples que você goste:</p>\n<ul>\n<li><strong>I-V-vi-IV</strong> (pop moderno): C-G-Am-F</li>\n<li><strong>vi-IV-I-V</strong> (pop melancólico): Am-F-C-G</li>\n<li><strong>I-vi-IV-V</strong> (anos 50): C-Am-F-G</li>\n<li><strong>ii-V-I-vi</strong> (jazz/MPB): Dm-G-C-Am</li>\n</ul>\n\n<h4>Passo 3: Crie a Melodia</h4>\n<p>A melodia é a parte que \"cantarolamos\". Algumas dicas:</p>\n<ul>\n<li><strong>Comece na tônica</strong> (nota do acorde principal) e vá subindo</li>\n<li><strong>Use a escala do tom</strong>: se está em C Maior, use notas de C D E F G A B</li>\n<li><strong>Salto de quarta ou quinta</strong> nas frases mais marcantes</li>\n<li><strong>Resolução na tônica</strong> no final das frases</li>\n</ul>\n\n<h4>Passo 4: Estruture a Música</h4>\n<p>Toda música popular tem uma estrutura. A mais comum:</p>\n<ul>\n<li><strong>Intro</strong> (4-8 compassos): apresenta o clima</li>\n<li><strong>Verso 1</strong> (8-16 compassos): apresenta a história</li>\n<li><strong>Refrão</strong> (8-16 compassos): a parte marcante, com o título da música</li>\n<li><strong>Verso 2</strong> (mesma melodia do verso 1, mas com letra diferente)</li>\n<li><strong>Refrão</strong> (repete)</li>\n<li><strong>Bridge</strong> (opcional, 4-8 compassos): parte diferente, geralmente contrasta com o resto</li>\n<li><strong>Refrão final</strong> (pode ser com letra modificada ou mais intenso)</li>\n<li><strong>Outro</strong> (instrumental de saída)</li>\n</ul>\n\n<h4>Passo 5: Escreva a Letra</h4>\n<p>A letra deve caber na melodia. Algumas dicas:</p>\n<ul>\n<li><strong>Rima sem forçar</strong>: rimas naturais, sem precisar inverter palavras</li>\n<li><strong>Mostre, não conte</strong>: \"Seus olhos brilham como o sol\" é melhor que \"Você é bonita\"</li>\n<li><strong>História clara</strong>: tem começo, meio e fim</li>\n<li><strong>Repita o refrão</strong> várias vezes - é a parte que as pessoas vão lembrar</li>\n</ul>\n\n<h4>Passo 6: Refine e Arranje</h4>\n<ul>\n<li>Toque para outras pessoas e peça feedback</li>\n<li>Grave no celular pra ouvir com distância crítica</li>\n<li>Experimente variar a dinâmica (intensidade) entre verso e refrão</li>\n<li>Adicione uma introdução marcante - pode ser o riff do refrão</li>\n</ul>\n\n<h4>Ferramentas Úteis</h4>\n<ul>\n<li><strong>Gravador do celular</strong>: para capturar ideias rapidamente</li>\n<li><strong>App de cifras</strong>: para anotar progressões</li>\n<li><strong>YouTube</strong>: pesquise \"como compor músicas\" - há cursos excelentes</li>\n</ul>\n\n<h4>Exercício: Componha Uma Música Hoje</h4>\n<ol>\n<li>Escolha a emoção: \"alegre\"</li>\n<li>Tom: G Maior</li>\n<li>Progressão: G - D - Em - C (I-V-vi-IV)</li>\n<li>Cante uma melodia sobre esses acordes (grava!)</li>\n<li>Escreva 1 verso e 1 refrão</li>\n<li>Toque para alguém</li>\n</ol>\n\n<h4>💡 Dica Final</h4>\n<p>Suas primeiras composições serão desajeitadas - e está tudo bem! Cada música que você compõe, mesmo que nunca seja publicada, te ensina algo. Os grandes compositores têm centenas de músicas \"ruins\" no currículo antes de fazerem a grande.</p>\n<p>O importante é COMEÇAR. Não espere a inspiração - ela vem enquanto você trabalha.</p>\n    "
+    }
+  ],
+  "musicas": [
+    {
+      "id": "s1",
+      "title": "Casa no Campo",
+      "artist": "Zezé Di Camargo & Luciano",
+      "category": "sertanejo",
+      "key": "G",
+      "bpm": 110,
+      "lyrics": "[Intro] G  C  G  D\n\n[Verso 1]\nG                    C\nEu quero uma casa no campo\n          G                D\nDo tamanho ideal, pra paz que eu quero\nG                       C\nUm pomar, uma horta um lugar\n          G         D      G\nPra plantar o que se comer\n\n[Refrão]\nC            G\nCasa no campo\nD              G\nLar doce lar\nC            G\nCasa no campo\nD              G\nLar doce lar\n\n[Verso 2]\nG                       C\nEu quero um cavalo que ouça\n           G               D\nO meu cantar, o meu assobio\nG                    C\nQue leve eu pra onde eu quiser\n            G       D       G\nE que volte quando eu pedir"
+    },
+    {
+      "id": "s2",
+      "title": "Trem-Bala",
+      "artist": "Ana Vilela",
+      "category": "mpb",
+      "key": "G",
+      "bpm": 95,
+      "lyrics": "[Intro] G  D  Em  C\n\n[Verso 1]\nG               D\nNão é sobre ter\n            Em         C\nTudo no seu lugar\nG            D\nÉ sobre saber\n        Em         C\nSe tem alguém pra te ouvir\n\n[Refrão]\nG                D\nTrem-bala, segue em frente\n            Em            C\nSem olhar pra trás\nG                  D\nA vida é assim\n              Em        C\nUm dia vai, outro vem\n\n[Verso 2]\nG                D\nNão é sobre ser\n           Em           C\nO melhor de todos\nG            D\nÉ sobre ser\n        Em         C\nAquele que faz o bem"
+    },
+    {
+      "id": "s3",
+      "title": "Asa Branca",
+      "artist": "Luiz Gonzaga",
+      "category": "popular",
+      "key": "G",
+      "bpm": 120,
+      "lyrics": "[Intro] G  C  G  D  G\n\n[Verso 1]\nG\nQuando olhei a terra ardendo\n            C\nQual fogueira de São João\nG\nEu perguntei a Deus do céu, ai\n            D           G\nPor que tamanha judiação\n\n[Refrão]\nG\nAsa branca, asa branca\n         C\nLeva eu pra casa\nG\nLeva eu pra casa\n            D          G\nLeva eu pra casa, meu bem\n\n[Verso 2]\nG\nSe我没有 mais a tua presença\n            C\nMeu lugá já não tem mais graça\nG\nPor isso eu faço essa viagem\n            D           G\nPra te ver, minha cabocla"
+    },
+    {
+      "id": "s4",
+      "title": "Eu Sei Que Vou Te Amar",
+      "artist": "Tom Jobim",
+      "category": "bossa",
+      "key": "D",
+      "bpm": 90,
+      "lyrics": "[Intro] Dm  G7  C  F\n\n[Verso 1]\nDm                    G7\nEu sei que vou te amar\n                C\nPor toda a minha vida eu vou te amar\nDm                    G7\nEm cada despedida eu vou te amar\n                C\nPor toda a minha vida\n\n[Refrão]\nF                  G7\nAmor, prazer e dor\n            C\nTudo isso me dás\nF               G7\nE assim será\n            C\nPor toda a minha vida"
+    },
+    {
+      "id": "s5",
+      "title": "Stand By Me",
+      "artist": "Ben E. King",
+      "category": "rock",
+      "key": "C",
+      "bpm": 100,
+      "lyrics": "[Intro] C  Am  C  Am\n\n[Verso 1]\nC                    Am\nWhen the night has come\n           C                Am\nAnd the land is dark\n        C                G\nAnd the moon is the only\n            F       G\nLight we'll see\n\n[Refrão]\nC       G\nNo, I won't be afraid\nAm        Em\nNo, I won't shed a tear\nF                G\nJust as long as you stand\nC\nStand by me\n\n[Verso 2]\nC                    Am\nSo darlin, darlin\n       C\nStand by me\n        Am\nOh, stand by me\n       C\nStand by me\n       G\nStand by me"
+    },
+    {
+      "id": "s6",
+      "title": "Amazing Grace",
+      "artist": "Tradicional",
+      "category": "gospel",
+      "key": "G",
+      "bpm": 80,
+      "lyrics": "[Intro] G  C  G  D  G\n\n[Verso 1]\nG\nAmazing grace\n        C\nHow sweet the sound\n        G         D\nThat saved a wretch\n            G\nLike me\n\n[Refrão]\nG\nI once was lost\n        C\nBut now am found\n        G         D        G\nWas blind but now I see\n\n[Verso 2]\nG\n'Twas grace that taught\n        C\nMy heart to fear\n        G         D\nAnd grace my\n            G\nFears relieved"
+    },
+    {
+      "id": "s7",
+      "title": "Atirei o Pau no Gato",
+      "artist": "Infantil",
+      "category": "infantil",
+      "key": "C",
+      "bpm": 130,
+      "lyrics": "[Intro] C  F  C  G\n\n[Verso 1]\nC\nAtirei o pau no gato\nF\nMas o gato não morreu\nC\nDona Chica assustou-se\nG                C\nCom o berro que o gato deu\n\n[Refrão]\nC\nMiau, miau, miau\nF\nMiau, miau, miau\nC\nDona Chica assustou-se\nG                C\nCom o berro que o gato deu"
+    },
+    {
+      "id": "s8",
+      "title": "Garota de Ipanema",
+      "artist": "Tom Jobim",
+      "category": "bossa",
+      "key": "F",
+      "bpm": 130,
+      "lyrics": "[Intro] F  G7  Am  G\n\n[Verso 1]\nF            G7\nOlha que coisa mais linda\n            Am             G\nMais cheia de graça\nF               G7\nÉ ela, menina, que vem e que passa\n        Am             G\nNum doce balanço, a caminho do mar\n\n[Refrão]\nF          G7\nMoça do corpo dourado\n        Am        G\nDo sol de Ipanema\nF          G7\nO seu balançado é mais que um poema\n        Am        G\nÉ a coisa mais linda que eu jamais vi"
+    },
+    {
+      "id": "s9",
+      "title": "Sina",
+      "artist": "Djavan",
+      "category": "mpb",
+      "key": "C",
+      "bpm": 95,
+      "lyrics": "[Intro] C  Am  Dm  G7\n\n[Verso 1]\nC                    Am\nÉ, sina de não ser nada\n        Dm        G7\nSem teu amor\nC                  Am\nTudo vira cinza e nada\n        Dm         G7\nFica com sabor\n\n[Refrão]\nC              G7\nVolta, meu amor\n        Am          G\nVolta pra mim\nF               G\nNão vás embora assim"
+    },
+    {
+      "id": "s10",
+      "title": "Knockin' on Heaven's Door",
+      "artist": "Bob Dylan",
+      "category": "rock",
+      "key": "G",
+      "bpm": 80,
+      "lyrics": "[Intro] G  D  C  G\n\n[Verso 1]\nG                D\nMama take this badge\n            C           G\nOff of me\nG                  D\nI can't use it anymore\n         C                G\nIt's getting dark, too dark to see\n          D\nFeels like I'm\n        C        G\nKnockin' on heaven's door\n\n[Refrão]\nG\nKnock, knock, knockin'\nD\nOn heaven's door\nC\nKnock, knock, knockin'\nG\nOn heaven's door"
+    },
+    {
+      "id": "g1",
+      "title": "Tua Graça Me Basta",
+      "artist": "Diante do Trono",
+      "category": "gospel",
+      "key": "C",
+      "bpm": 75,
+      "lyrics": "[Intro] C  Am  F  G\n\n[Verso 1]\nC                 Am\nTua graça me basta\n              F           G\nO Teu amor é tudo que eu preciso\nC              Am\nEm Tua presença\n            F              G\nEncontro a paz que o mundo não dá\n\n[Refrão]\nC               G\nTua graça me basta\nAm                F\nTua graça me basta\nC                G\nEm todo momento\nF            C\nTua graça me basta\n\n[Verso 2]\nC              Am\nQuando estou fraco\n              F            G\nÉs a minha força e o meu sustento\nC              Am\nEm meio à fraqueza\n          F          G\nO Teu poder se faz completo"
+    },
+    {
+      "id": "g2",
+      "title": "Dias de Elias",
+      "artist": "Luciano Camargo",
+      "category": "gospel",
+      "key": "E",
+      "bpm": 130,
+      "lyrics": "[Intro] E  B  C#m  A\n\n[Verso 1]\nE\nEsses são dias de Elias\nB\nPra quem conhece o Deus de Israel\nC#m\nDias de culto e oração\nA\nPra quem não tem medo de ser usado\n\n[Refrão]\nE\nOs dias de Elias\nB\nEstão chegando\nC#m\nPra quem clama o nome do Senhor\nA\nOs céus se abrirão\nE\nE a chuva há de cair\nB\nSobre a tua vida\nC#m           A\nSobre a tua casa\nE\nE sobre tudo o que é teu"
+    },
+    {
+      "id": "g3",
+      "title": "Jeová Jireh",
+      "artist": "Aline Barros",
+      "category": "gospel",
+      "key": "A",
+      "bpm": 80,
+      "lyrics": "[Intro] A  E  F#m  D\n\n[Verso 1]\nA\nJeová Jiré\n            E\nO meu provedor\nF#m\nTens o que eu preciso\n         D\nNo Teu grande amor\nA\nJeová Jiré\n            E\nO meu provedor\nF#m\nTens o que eu preciso\n         D\nNo Teu grande amor\n\n[Refrão]\nA                E\nQuem dEle se aproxima\nF#m            D\nNão sai frustrado\nA                E\nQuem dEle se aproxima\nF#m            D\nNão sai de mãos vazias\nA                E\nQuem dEle se aproxima\nF#m            D\nNão sai frustrado\nA                E\nQuem dEle se aproxima\nF#m            D\nNão sai frustrado"
+    },
+    {
+      "id": "g4",
+      "title": "Digno É",
+      "artist": "Vineyard",
+      "category": "gospel",
+      "key": "C",
+      "bpm": 70,
+      "lyrics": "[Intro] C  Am  F  G\n\n[Verso 1]\nC                Am\nDigno é o Cordeiro\nF               G\nQue foi morto\nC              Am\nDe receber o poder\nF                G\nE a riqueza, a sabedoria\nC            Am\nA força e a honra\nF            G\nA glória e o louvor\n\n[Refrão]\nC        F\nDigno, digno, digno\nG              C\nÉ o Cordeiro de Deus\nC        F\nDigno, digno, digno\nG              C\nÉ o Cordeiro de Deus\n\n[Verso 2]\nC                Am\nAo que está assentado\nF               G\nNo trono\nC                Am\nE ao Cordeiro\nF            G\nSeja o louvor"
+    },
+    {
+      "id": "g5",
+      "title": "Porque Ele Vive",
+      "artist": "Harpa Cristã",
+      "category": "gospel",
+      "key": "G",
+      "bpm": 90,
+      "lyrics": "[Intro] G  C  G  D\n\n[Verso 1]\nG                    C\nDeus enviou seu Filho amado\n              G             D\nPra me salvar da condenação\nG               C\nJesus, o Cristo, o Ungido\n            G        D        G\nPôr-se em meu lugar no Calvário\n\n[Refrão]\nG\nPorque Ele vive, posso crer no amanhã\nC\nPorque Ele vive, temor não há\nG                D\nMas eu não sei, não sei a razão\nG      C      G\nDe tanto amor, de tanto amor\n\n[Verso 2]\nG                   C\nDeus enviou seu Filho amado\n             G              D\nE pela fé eu O recebi\nG                C\nE de Sua morte recebi a vida\n           G       D        G\nE com Jesus eu vou ressurgir"
+    },
+    {
+      "id": "g6",
+      "title": "Grandioso És Tu",
+      "artist": "Harpa Cristã",
+      "category": "gospel",
+      "key": "D",
+      "bpm": 85,
+      "lyrics": "[Intro] D  A  Bm  G\n\n[Verso 1]\nD\nSenhor meu Deus, quando eu\nA\nMaravilhado olho a criação\nBm\nE vejo o céu, as estrelas\nG\nE a terra onde habitei\n\n[Refrão]\nD\nQuão grande és Tu\nA\nQuão grande és Tu\nBm\nQuão grande és Tu\nG\nQuão grande és Tu\n\n[Verso 2]\nD\nQuando eu caminho pelos\nA\nVales verdes e floridos\nBm\nOuço as aves mil cantando\nG\nE a brisa suave a sussurrar\n\n[Verso 3]\nD\nE quando penso que Jesus\nA\nMorreu por mim no Calvário\nBm\nE vive agora, vive eternamente\nG\nPra me levar ao Seu lar"
+    },
+    {
+      "id": "g7",
+      "title": "Alvo Mais Que a Neve",
+      "artist": "Harpa Cristã",
+      "category": "gospel",
+      "key": "F",
+      "bpm": 90,
+      "lyrics": "[Intro] F  C  Dm  Bb\n\n[Verso 1]\nF          C\nMais branco que a neve\nDm         Bb\nMais branco que a neve\nF          C\nTu me lavarás\nBb           C\nE mais branco me farás\n\n[Refrão]\nF          C\nAlvo mais que a neve\nDm         Bb\nAlvo mais que a neve\nF          C\nTu me lavarás\nBb        C      F\nE mais branco me farás\n\n[Verso 2]\nF          C\nMais puro que o lírio\nDm         Bb\nMais puro que o lírio\nF          C\nTu me farás\nBb           C\nMais puro me farás"
+    },
+    {
+      "id": "g8",
+      "title": "Vencendo Vem Jesus",
+      "artist": "Harpa Cristã",
+      "category": "gospel",
+      "key": "G",
+      "bpm": 100,
+      "lyrics": "[Intro] G  D  C  G\n\n[Verso 1]\nG\nVencendo vem Jesus\nD\nO Rei da glória\nC                  G\nO Capitão das hostes\nD         G\nÉ o Senhor\n\n[Refrão]\nG\nVencendo vem Jesus\nD\nCom Seu poder\nC\nA morte venceu\nG\nE vivo está\n\n[Verso 2]\nG\nOs santos e os anjos\nD\nA voz levantam\nC\nAo Rei dos reis\nG\nD       G\nHosana cantam"
+    },
+    {
+      "id": "g9",
+      "title": "Teus Sonhos",
+      "artist": "Eliã Oliveira",
+      "category": "gospel",
+      "key": "A",
+      "bpm": 95,
+      "lyrics": "[Intro] A  E  F#m  D\n\n[Verso 1]\nA            E\nNão deixe os seus sonhos\nF#m           D\nMorrerem no coração\nA            E\nNão deixe o desânimo\nF#m           D\nTirar a sua fé\n\n[Refrão]\nA\nTeus sonhos Deus tem\nE\nNo livro da vida\nF#m\nE vão se realizar\nD\nNo tempo dEle\nA\nTeus sonhos Deus tem\nE\nSão lindos demais\nF#m\nE vão acontecer\nD\nConfia no Senhor\n\n[Verso 2]\nA            E\nLevante a sua cabeça\nF#m             D\nE olhe pra cima\nA            E\nDeus está contigo\nF#m           D\nE nunca te deixou"
+    },
+    {
+      "id": "g10",
+      "title": "Nada Além do Sangue",
+      "artist": "Isaías Saad",
+      "category": "gospel",
+      "key": "C",
+      "bpm": 75,
+      "lyrics": "[Intro] C  Am  F  G\n\n[Verso 1]\nC\nO que pode me lavar\nAm\nDe todo o meu pecado\nF\nÉ o sangue de Jesus\nG\nQue me faz purificado\n\n[Refrão]\nC\nNada além do sangue\nAm\nDe Jesus, meu Senhor\nF\nSó Ele é suficiente\nG\nPra me dar o Seu amor\n\n[Verso 2]\nC\nNão há outro remédio\nAm\nPra minha enfermidade\nF\nÉ o sangue precioso\nG\nQue me trás liberdade"
+    },
+    {
+      "id": "g11",
+      "title": "Yahweh (Yaveh)",
+      "artist": "Nívea Soares",
+      "category": "gospel",
+      "key": "D",
+      "bpm": 80,
+      "lyrics": "[Intro] D  A  Bm  G\n\n[Verso 1]\nD                A\nYahweh, Yahweh\nBm                G\nPrecioso é o Teu nome\nD                A\nYahweh, Yahweh\nBm                G\nPrecioso é o Teu nome\n\n[Refrão]\nD\nNão há outro nome\nA\nNão há outro nome\nBm\nNão há outro nome\nG\nComo o Teu, Senhor\n\n[Verso 2]\nD                A\nJesus, Jesus\nBm                G\nPrecioso é o Teu nome\nD                A\nJesus, Jesus\nBm                G\nPrecioso é o Teu nome"
+    },
+    {
+      "id": "g12",
+      "title": "Eu Navegarei",
+      "artist": "Vineyard",
+      "category": "gospel",
+      "key": "G",
+      "bpm": 120,
+      "lyrics": "[Intro] G  C  G  C\n\n[Verso 1]\nG               C\nEu navegarei nas águas\nG               C\nEu navegarei nas águas\nG               C\nEu navegarei nas águas\n        D\nSe Tu me guiar\n\n[Refrão]\nG         C\nProfundo chama\nG         C\nProfundo chama\nG         C\nEu vou mais fundo\nD\nEm Teu amor\n\n[Verso 2]\nG             C\nOnde Tu fores eu irei\nG             C\nOnde Tu fores eu irei\nG             C\nOnde Tu fores eu irei\n       D\nTe seguirei"
+    },
+    {
+      "id": "g13",
+      "title": "A Casa é Sua",
+      "artist": "Casa Worship",
+      "category": "gospel",
+      "key": "C",
+      "bpm": 85,
+      "lyrics": "[Intro] C  Am  F  G\n\n[Verso 1]\nC\nA casa é Sua\nAm\nA casa é Sua\nF\nA casa é Sua\nG\nE nós somos Seus\n\n[Refrão]\nC\nBem-vindo, Espírito\nAm\nBem-vindo, Espírito\nF\nBem-vindo, Espírito\nG\nBem-vindo aqui\n\n[Verso 2]\nC\nToma o Teu lugar\nAm\nToma o Teu lugar\nF\nToma o Teu lugar\nG\nAqui é Teu lar"
+    },
+    {
+      "id": "g14",
+      "title": "Lugar Secreto",
+      "artist": "Gabriela Rocha",
+      "category": "gospel",
+      "key": "C",
+      "bpm": 90,
+      "lyrics": "[Intro] C  Am  F  G\n\n[Verso 1]\nC\nEu quero estar\nAm\nNo lugar secreto\nF\nAo pé do Teu trono\nG\nPra Te adorar\n\n[Refrão]\nC\nAli eu encontro\nAm\nA paz que só Tu dás\nF\nAli eu encontro\nG\nA Tua presença real\n\n[Verso 2]\nC\nNo silêncio santo\nAm\nEu ouço a Tua voz\nF\nE o Teu Espírito\nG\nMe enche de Ti"
+    },
+    {
+      "id": "g15",
+      "title": "Oceanos (Onde Meus Pés Podem Falhar)",
+      "artist": "Hillsong",
+      "category": "gospel",
+      "key": "D",
+      "bpm": 80,
+      "lyrics": "[Intro] D  A  Bm  G\n\n[Verso 1]\nD                A\nTu me chamas sobre as águas\nBm                G\nOnde meus pés podem falhar\nD              A\nE é ali que me encontro\nBm              G\nCom olhos fitos em Ti\n\n[Refrão]\nD\nE me chamas\nA\nE mergulho\nBm\nNo Teu amor\nG\nE o meu coração\nD\nSe rende\nA\nSem medo\nBm\nOnde Tu estás\nG\nA água se firma\n\n[Verso 2]\nD                A\nE a minha fé será\nBm                G\nComo os meus olhos em Ti\nD              A\nE nas promessas\nBm              G\nOnde Tu me levas a andar"
+    },
+    {
+      "id": "g16",
+      "title": "Quão Grande É o Meu Amor",
+      "artist": "Vineyard",
+      "category": "gospel",
+      "key": "C",
+      "bpm": 95,
+      "lyrics": "[Intro] C  F  C  G\n\n[Verso 1]\nC                  F\nQuão grande é o meu amor\n            C          G\nPor Ti, ó meu Senhor\nC                 F\nE eu me renderei\n        C           G\nA Ti, ó meu Jesus\n\n[Refrão]\nC          G\nE por Ti eu dançarei\nAm         F\nE por Ti eu cantarei\nC          G\nE com todo o meu ser\nF           C\nTe adorarei, Senhor\n\n[Verso 2]\nC                 F\nE nada me separará\n            C          G\nDo Teu grande amor\nC                F\nE em todo tempo eu vou\n        C           G\nTe amar, ó meu Jesus"
+    }
+  ]
+}
