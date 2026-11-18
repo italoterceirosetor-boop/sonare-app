@@ -1,0 +1,49 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "admins": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid"
+      }
+    },
+
+    "conteudo": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+    },
+
+    "aulas": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+    },
+
+    "codigos": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+      "$codigo": {
+        ".read": "auth != null"
+      }
+    },
+
+    "vinculos": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid && (!newData.exists() || root.child('codigos').child(newData.val()).exists())"
+      }
+    },
+
+    "alunos": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+      "$id": {
+        ".read": "auth != null && root.child('vinculos').child(auth.uid).exists() && root.child('codigos').child(root.child('vinculos').child(auth.uid).val()).child('alunoId').val() === $id && root.child('alunos').child($id).child('revogado').val() !== true",
+        "ritmos": {
+          ".write": "auth != null && root.child('vinculos').child(auth.uid).exists() && root.child('codigos').child(root.child('vinculos').child(auth.uid).val()).child('alunoId').val() === $id && root.child('alunos').child($id).child('revogado').val() !== true"
+        }
+      }
+    }
+  }
+}

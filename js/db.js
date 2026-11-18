@@ -84,32 +84,37 @@ async function dbGetAlunoLogado() {
   return aluno || null;
 }
 
+/**
+ * Login do aluno por código.
+ * Com Firebase configurado, o servidor é quem valida: o app NÃO baixa
+ * mais a lista de alunos. Retorna o aluno ou { erro: 'invalido' | 'revogado' | 'offline' }.
+ */
 async function dbLoginAluno(codigo) {
-  let alunos = await dbGetAll('alunos');
-  let aluno = alunos.find(a => a.codigo && a.codigo.toUpperCase() === codigo.toUpperCase());
+  codigo = String(codigo || '').trim().toUpperCase();
+  let aluno;
 
-  // Se nao achou, busca no Firebase
-  if (!aluno && window.firebase && window.firebase.database) {
-    try {
-      const fbSnapshot = await window.firebase.database().ref('/alunos').once('value');
-      const fbAlunos = fbSnapshot.val();
-      if (fbAlunos) {
-        await dbClear('alunos');
-        for (const [id, a] of Object.entries(fbAlunos)) {
-          if (a && a.codigo) await dbPut('alunos', { ...a, id });
-        }
-        alunos = await dbGetAll('alunos');
-        aluno = alunos.find(a => a.codigo && a.codigo.toUpperCase() === codigo.toUpperCase());
-      }
-    } catch (e) {
-      console.warn('Firebase sync falhou:', e);
-    }
+  if (window.FIREBASE_CONFIGURED && window.loginAlunoFirebase) {
+    const r = await window.loginAlunoFirebase(codigo);
+    if (r.erro) return r;
+    aluno = r;
+    // Guarda só o próprio aluno no aparelho
+    await dbClear('alunos');
+    await dbPut('alunos', aluno);
+  } else {
+    // Modo sem servidor (desenvolvimento): procura nos alunos locais
+    const alunos = await dbGetAll('alunos');
+    aluno = alunos.find(a => a.codigo && a.codigo.toUpperCase() === codigo);
+    if (!aluno) return { erro: 'invalido' };
+    if (aluno.revogado) return { erro: 'revogado' };
   }
 
-  if (!aluno) return null;
-  if (aluno.revogado) return null;
-  await dbPut('sessoes', { key: 'aluno', alunoId: aluno.id, loginAt: Date.now() });
+  await dbPut('sessoes', { key: 'aluno', alunoId: aluno.id, codigo, loginAt: Date.now() });
   return aluno;
+}
+
+/** Sessão salva (alunoId + código), ou null */
+async function dbGetSessao() {
+  return (await dbGet('sessoes', 'aluno')) || null;
 }
 
 async function dbLogout() {
@@ -165,6 +170,7 @@ async function dbSeedIfNeeded(seedData) {
 window.SonareDB = {
   getAll: dbGetAll, get: dbGet, put: dbPut, del: dbDel, clear: dbClear,
   getAlunoLogado: dbGetAlunoLogado, loginAluno: dbLoginAluno, logout: dbLogout,
+  getSessao: dbGetSessao,
   getConfig: dbGetConfig, setConfig: dbSetConfig,
   seedIfNeeded: dbSeedIfNeeded,
 };

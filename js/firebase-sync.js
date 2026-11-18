@@ -30,18 +30,137 @@ async function initFirebase() {
   }
 
   try {
-    firebaseApp = firebase.initializeApp(window.FIREBASE_CONFIG);
+    firebaseApp = firebase.apps.length ? firebase.app() : firebase.initializeApp(window.FIREBASE_CONFIG);
     firebaseDb = firebase.database();
     firebaseAuth = firebase.auth();
 
-    // Login anônimo (não precisa email/senha)
-    await firebaseAuth.signInAnonymously();
-    console.log('[firebase] conectado como', firebaseAuth.currentUser?.uid);
+    // Espera o Firebase restaurar a sessão salva (se houver)
+    await new Promise((resolve) => {
+      const off = firebaseAuth.onAuthStateChanged(() => { off(); resolve(); });
+    });
+
+    // No app do aluno: login anônimo. No painel admin NÃO — o professor
+    // entra com e-mail e senha (ver admin.html).
+    if (!firebaseAuth.currentUser && !window.SONARE_ADMIN_PAGE) {
+      await firebaseAuth.signInAnonymously();
+    }
+    console.log('[firebase] conectado como', firebaseAuth.currentUser?.uid || '(sem login)');
     return true;
   } catch (err) {
     console.warn('[firebase] erro ao iniciar:', err.message);
+    firebaseApp = null;
     return false;
   }
+}
+
+/* ============================================================
+   LOGIN DO PROFESSOR (e-mail + senha do Firebase Auth)
+============================================================ */
+async function adminLoginFirebase(email, senha) {
+  const ok = await initFirebase();
+  if (!ok) throw new Error('Sem conexão com o servidor.');
+  await firebaseAuth.signInWithEmailAndPassword(email, senha);
+  return firebaseAuth.currentUser;
+}
+
+async function adminLogoutFirebase() {
+  if (firebaseAuth) await firebaseAuth.signOut();
+}
+
+/** true se o usuário logado está em /admins/{uid} */
+async function isAdminFirebase() {
+  const ok = await initFirebase();
+  const user = firebaseAuth?.currentUser;
+  if (!ok || !user || user.isAnonymous) return false;
+  try {
+    const snap = await firebaseDb.ref(`/admins/${user.uid}`).once('value');
+    return snap.val() === true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function currentUserFirebase() {
+  return firebaseAuth?.currentUser || null;
+}
+
+function isPermissionError(e) {
+  return e && (e.code === 'PERMISSION_DENIED' || /permission/i.test(e.message || ''));
+}
+
+/* ============================================================
+   LOGIN DO ALUNO POR CÓDIGO
+   /codigos/{CODIGO} = { alunoId }   (só leitura individual)
+   /vinculos/{uid}   = CODIGO        (liga o aparelho ao aluno)
+   Retorna o aluno, ou { erro: 'invalido' | 'revogado' | 'offline' }
+============================================================ */
+async function loginAlunoFirebase(codigo) {
+  const ok = await initFirebase();
+  const uid = firebaseAuth?.currentUser?.uid;
+  if (!ok || !uid) return { erro: 'offline' };
+  codigo = String(codigo || '').trim().toUpperCase();
+  if (!/^[A-Z0-9-]{4,20}$/.test(codigo)) return { erro: 'invalido' };
+
+  let alunoId;
+  try {
+    const snap = await firebaseDb.ref(`/codigos/${codigo}`).once('value');
+    alunoId = snap.val()?.alunoId;
+  } catch (e) {
+    return { erro: isPermissionError(e) ? 'invalido' : 'offline' };
+  }
+  if (!alunoId) return { erro: 'invalido' };
+
+  try {
+    await firebaseDb.ref(`/vinculos/${uid}`).set(codigo);
+    const snap = await firebaseDb.ref(`/alunos/${alunoId}`).once('value');
+    const aluno = snap.val();
+    if (!aluno) return { erro: 'invalido' };
+    if (aluno.revogado) return { erro: 'revogado' };
+    return { ...aluno, id: String(alunoId), codigo };
+  } catch (e) {
+    // permission_denied aqui = aluno revogado (as regras bloqueiam a leitura)
+    return { erro: isPermissionError(e) ? 'revogado' : 'offline' };
+  }
+}
+
+/**
+ * Confere se o aluno logado continua válido (não revogado/excluído).
+ * Refaz o vínculo se o aparelho perdeu a sessão anônima.
+ * Retorna 'ok' | 'revogado' | 'offline'.
+ */
+async function checarAlunoFirebase(alunoId, codigo) {
+  const ok = await initFirebase();
+  const uid = firebaseAuth?.currentUser?.uid;
+  if (!ok || !uid) return 'offline';
+  try {
+    if (!codigo) return 'revogado'; // sessão antiga, sem código salvo: pede login de novo
+    const vinc = await firebaseDb.ref(`/vinculos/${uid}`).once('value');
+    if (vinc.val() !== codigo) await firebaseDb.ref(`/vinculos/${uid}`).set(codigo);
+    const snap = await firebaseDb.ref(`/alunos/${alunoId}`).once('value');
+    const aluno = snap.val();
+    if (!aluno || aluno.revogado) return 'revogado';
+    return 'ok';
+  } catch (e) {
+    return isPermissionError(e) ? 'revogado' : 'offline';
+  }
+}
+
+/**
+ * (Admin) Recria o índice /codigos a partir de /alunos.
+ * Alunos revogados ficam fora do índice.
+ */
+async function syncCodigosFirebase() {
+  await initFirebase();
+  const snap = await firebaseDb.ref('/alunos').once('value');
+  const alunos = snap.val() || {};
+  const codigos = {};
+  for (const [id, a] of Object.entries(alunos)) {
+    if (a && a.codigo && !a.revogado) {
+      codigos[String(a.codigo).toUpperCase()] = { alunoId: String(id) };
+    }
+  }
+  await firebaseDb.ref('/codigos').set(codigos);
+  return Object.keys(codigos).length;
 }
 
 function loadScript(src) {
@@ -151,9 +270,11 @@ const DEFAULT_ALARME_FB = {
 
 async function saveAlunoFirebase(aluno) {
   await initFirebase();
-  // SEMPRE usa o id local (number) — gera id se não existir
-  const id = aluno.id || Date.now().toString();
-  await firebaseDb.ref(`/alunos/${id}`).set({ ...aluno, id, createdAt: Date.now() });
+  const id = String(aluno.id || Date.now());
+  // update (não set) pra não apagar dados que o aluno grava, como /ritmos
+  const { ritmos, ...dados } = aluno;
+  await firebaseDb.ref(`/alunos/${id}`).update({ ...dados, id, updatedAt: Date.now() });
+  await syncCodigosFirebase();
   return id;
 }
 
@@ -173,7 +294,8 @@ function loadAlunoAlarmeFirebase(alunoId, callback) {
 
 async function deleteAlunoFirebase(id) {
   await initFirebase();
-  await firebaseDb.ref(`/alunos/${id}`).remove();
+  await firebaseDb.ref(`/alunos/${String(id)}`).remove();
+  await syncCodigosFirebase();
 }
 
 async function saveConteudoFirebase(conteudo) {
@@ -221,6 +343,13 @@ async function deleteMusicaFirebase(mId) {
 ============================================================ */
 
 window.initFirebase = initFirebase;
+window.adminLoginFirebase = adminLoginFirebase;
+window.adminLogoutFirebase = adminLogoutFirebase;
+window.isAdminFirebase = isAdminFirebase;
+window.currentUserFirebase = currentUserFirebase;
+window.loginAlunoFirebase = loginAlunoFirebase;
+window.checarAlunoFirebase = checarAlunoFirebase;
+window.syncCodigosFirebase = syncCodigosFirebase;
 window.loadConteudoFirebase = loadConteudoFirebase;
 window.loadAulasFirebase = loadAulasFirebase;
 window.loadAlunosFirebase = loadAlunosFirebase;

@@ -115,10 +115,18 @@
 <div id="login-screen" class="app" style="display:none;">
   <div class="code-entry" style="max-width: 420px; margin: 80px auto;">
     <h2>🔒 Painel Admin</h2>
-    <p>Digite a senha para acessar.</p>
-    <input class="code-entry__input" id="admin-password" type="password" placeholder="••••••••" autocomplete="off" style="letter-spacing: 0.3em; text-align: center;" />
-    <button class="btn btn--gold btn--block" id="admin-enter" style="margin-top: 12px;">Entrar</button>
+    <p>Entre com o e-mail e a senha do professor.</p>
+    <form id="admin-form">
+      <input class="code-entry__input" id="admin-email" type="email" placeholder="e-mail" autocomplete="username" required style="text-align: center; letter-spacing: normal; text-transform: none;" />
+      <input class="code-entry__input" id="admin-password" type="password" placeholder="senha" autocomplete="current-password" required style="text-align: center; letter-spacing: normal; text-transform: none; margin-top: 8px;" />
+      <button type="submit" class="btn btn--gold btn--block" id="admin-enter" style="margin-top: 12px;">Entrar</button>
+    </form>
     <div class="code-entry__error" id="admin-error"></div>
+    <div id="admin-uid-box" style="display:none; margin-top: 16px; font-size: .8rem; color: var(--cream-dim); text-align: left;">
+      Este usuário ainda não é professor no banco. No console do Firebase,
+      em <strong>Realtime Database</strong>, crie <code>admins</code> → <code id="admin-uid"></code> = <code>true</code>.
+      <button type="button" class="btn btn--ghost btn--block" id="admin-sair-sem-acesso" style="margin-top: 8px;">Sair</button>
+    </div>
   </div>
 </div>
 
@@ -129,48 +137,10 @@
 </div>
 
 <script>
-  // Senha fixa do admin (mude aqui se quiser)
-  window.SONARE_ADMIN_PASSWORD = 'TROCAR-SENHA'; // senha real removida do repositório — será substituída por login Firebase
-
-  // Garante que o conteúdo do admin só carrega após validar senha
-  (function() {
-    const loginScreen = document.getElementById('login-screen');
-    const appScreen = document.getElementById('app');
-    const input = document.getElementById('admin-password');
-    const btn = document.getElementById('admin-enter');
-    const err = document.getElementById('admin-error');
-
-    function showError(msg) {
-      err.textContent = msg;
-      setTimeout(() => { err.textContent = ''; }, 3000);
-    }
-
-    function tryEnter() {
-      const senha = input.value;
-      if (senha === window.SONARE_ADMIN_PASSWORD) {
-        sessionStorage.setItem('sonare-admin-auth', '1');
-        loginScreen.style.display = 'none';
-        appScreen.style.display = '';
-      } else {
-        showError('Senha incorreta.');
-        input.value = '';
-        input.focus();
-      }
-    }
-
-    // Se já logou nesta sessão, pula login
-    if (sessionStorage.getItem('sonare-admin-auth') === '1') {
-      loginScreen.style.display = 'none';
-      appScreen.style.display = '';
-    } else {
-      loginScreen.style.display = '';
-      appScreen.style.display = 'none';
-      setTimeout(() => input.focus(), 100);
-    }
-
-    btn.addEventListener('click', tryEnter);
-    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryEnter(); });
-  })();
+  // Painel admin: login do professor pelo Firebase Auth (e-mail + senha).
+  // A proteção de verdade está nas regras do banco (database.rules.json):
+  // só quem está em /admins/{uid} consegue ler alunos e gravar conteúdo.
+  window.SONARE_ADMIN_PAGE = true;
 </script>
 
 <script src="js/db.js"></script>
@@ -180,5 +150,78 @@
 <script src="js/conteudo.js"></script>
 <script src="js/sonare-data.js"></script>
 <script src="js/admin.js"></script>
+<script>
+  (function () {
+    const loginScreen = document.getElementById('login-screen');
+    const appScreen = document.getElementById('app');
+    const form = document.getElementById('admin-form');
+    const email = document.getElementById('admin-email');
+    const senha = document.getElementById('admin-password');
+    const btn = document.getElementById('admin-enter');
+    const err = document.getElementById('admin-error');
+    const uidBox = document.getElementById('admin-uid-box');
+
+    function mostrarLogin() {
+      loginScreen.style.display = '';
+      appScreen.style.display = 'none';
+      setTimeout(() => email.focus(), 100);
+    }
+
+    async function entrarSeAdmin() {
+      if (await window.isAdminFirebase()) {
+        loginScreen.style.display = 'none';
+        appScreen.style.display = '';
+        window.startAdmin();
+        return true;
+      }
+      const user = window.currentUserFirebase();
+      if (user && !user.isAnonymous) {
+        // Logou, mas ainda não foi liberado como professor no banco
+        form.style.display = 'none';
+        document.getElementById('admin-uid').textContent = user.uid;
+        uidBox.style.display = '';
+      }
+      return false;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      err.textContent = '';
+      btn.disabled = true;
+      try {
+        await window.adminLoginFirebase(email.value.trim(), senha.value);
+        senha.value = '';
+        await entrarSeAdmin();
+      } catch (ex) {
+        const code = ex.code || '';
+        err.textContent =
+          /wrong-password|user-not-found|invalid-credential|invalid-login|invalid-email/.test(code) ? 'E-mail ou senha incorretos.' :
+          /too-many-requests/.test(code) ? 'Muitas tentativas. Espere alguns minutos.' :
+          /operation-not-allowed/.test(code) ? 'Login por e-mail não está ativado no Firebase.' :
+          'Não consegui entrar: ' + (ex.message || ex);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById('admin-sair-sem-acesso').addEventListener('click', async () => {
+      await window.adminLogoutFirebase();
+      location.reload();
+    });
+
+    window.adminSair = async () => {
+      await window.adminLogoutFirebase();
+      location.reload();
+    };
+
+    if (!window.FIREBASE_CONFIGURED) {
+      err.textContent = 'Firebase não configurado (js/firebase-config.js).';
+      mostrarLogin();
+      return;
+    }
+    // Se já tem sessão de professor salva, entra direto
+    entrarSeAdmin().then((ok) => { if (!ok) mostrarLogin(); });
+  })();
+</script>
 </body>
 </html>

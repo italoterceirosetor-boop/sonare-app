@@ -53,7 +53,10 @@ async function render() {
   const topbar = `
 <div style="display:flex;justify-content:space-between;align-items:center;margin: 0 16px 16px">
       <span style="font-family: var(--mono); font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--cream-dim)">Sonare · Admin</span>
-      <a class="topbar__action" href="./index.html">← App do aluno</a>
+      <span style="display:flex;gap:12px;align-items:center">
+        <a class="topbar__action" href="./index.html">← App do aluno</a>
+        <button class="btn btn--ghost" id="admin-logout">Sair</button>
+      </span>
     </div>
 
     <div class="admin-tabs">
@@ -65,6 +68,7 @@ async function render() {
   `;
 
   $('#app').innerHTML = topbar;
+  $('#admin-logout').addEventListener('click', () => window.adminSair && window.adminSair());
   $$('[data-tab]').forEach(b => {
     b.addEventListener('click', () => { tab = b.dataset.tab; render(); });
   });
@@ -354,7 +358,8 @@ async function renderAlunos() {
   $$('[data-rev]').forEach(btn => {
     btn.addEventListener('click', async () => {
       const id = btn.dataset.rev;
-      const aluno = alunos.find(a => a.id === id);
+      // id pode ser number (IndexedDB) ou string (Firebase): compara como texto
+      const aluno = alunos.find(a => String(a.id) === id);
       if (!aluno) return;
       aluno.revogado = !aluno.revogado;
       await smartSave('alunos', aluno, window.saveAlunoFirebase); // re-habilitado pros saves do Firebase
@@ -366,14 +371,14 @@ async function renderAlunos() {
   $$('[data-del-aluno]').forEach(btn => {
     btn.addEventListener('click', async () => {
       if (!confirm('Excluir PERMANENTEMENTE este aluno do banco? Esta ação não pode ser desfeita.')) return;
-      const idNum = Number(btn.dataset.delAluno);
-      const aluno = alunos.find(a => a.id === idNum || a.id === btn.dataset.delAluno);
+      const aluno = alunos.find(a => String(a.id) === btn.dataset.delAluno);
       if (!aluno) return;
       // Remove do IndexedDB
       try { await window.SonareDB.del('alunos', aluno.id); } catch (e) {}
-      // Remove do Firebase (se for string ID)
-      if (typeof aluno.id === 'string' && window.deleteAlunoFirebase) {
-        try { await window.deleteAlunoFirebase(aluno.id); } catch (e) {}
+      // Remove do Firebase (antes só removia se o id fosse texto — alunos
+      // criados com id numérico "voltavam" na próxima sincronização)
+      if (window.deleteAlunoFirebase) {
+        try { await window.deleteAlunoFirebase(aluno.id); } catch (e) { console.warn('[admin] excluir no Firebase:', e.message); }
       }
       showToast('Aluno excluído.');
       render();
@@ -1073,7 +1078,24 @@ async function bootstrap() {
     } catch (e) {}
   }
 
+  // Recria o índice de códigos (/codigos) a partir dos alunos.
+  // Necessário na primeira vez depois da mudança de segurança.
+  if (window.syncCodigosFirebase) {
+    try {
+      const n = await window.syncCodigosFirebase();
+      console.log(`[admin] índice de códigos atualizado (${n} ativos)`);
+    } catch (e) {
+      console.warn('[admin] não consegui atualizar /codigos:', e.message);
+    }
+  }
+
   render();
 }
 
-bootstrap();
+// Só inicia depois que admin.html confirmar o login do professor
+let adminIniciado = false;
+window.startAdmin = () => {
+  if (adminIniciado) return;
+  adminIniciado = true;
+  bootstrap();
+};

@@ -36,11 +36,23 @@ function showLogin() {
   const submit = async () => {
     const codigo = input.value.trim();
     if (!codigo) { $('#erro').textContent = 'Digite um código.'; return; }
-    const aluno = await loginAluno(codigo);
-    if (!aluno) {
-      $('#erro').textContent = 'Código inválido ou revogado. Confira com seu professor.';
+    const btn = $('#entrar');
+    btn.disabled = true;
+    $('#erro').textContent = 'Conferindo...';
+    let r;
+    try {
+      r = await loginAluno(codigo);
+    } finally {
+      btn.disabled = false;
+    }
+    if (!r || r.erro) {
+      $('#erro').textContent = {
+        revogado: 'Este código foi desativado. Fale com seu professor.',
+        offline: 'Sem conexão. Conecte à internet pra entrar pela primeira vez.',
+      }[r?.erro] || 'Código inválido. Confira com seu professor.';
       return;
     }
+    $('#erro').textContent = '';
     bootstrap();
   };
 
@@ -276,9 +288,23 @@ async function bootstrap() {
 ============================================================ */
 (async () => {
   const aluno = await getAlunoLogado();
-  if (aluno) {
-    bootstrap();
-  } else {
-    showLogin();
+  if (!aluno) return showLogin();
+  bootstrap();
+
+  // Em segundo plano: confere no servidor se o código ainda vale.
+  // Se o professor revogou/excluiu o aluno, desloga. Sem internet, segue offline.
+  if (window.FIREBASE_CONFIGURED && window.checarAlunoFirebase) {
+    try {
+      const sessao = await window.SonareDB.getSessao();
+      const status = await window.checarAlunoFirebase(String(aluno.id), sessao?.codigo);
+      if (status === 'revogado') {
+        await logout();
+        stopAlarm();
+        alert('Seu acesso foi desativado ou expirou. Digite o código de novo ou fale com seu professor.');
+        location.reload();
+      }
+    } catch (e) {
+      console.warn('[login] checagem falhou:', e);
+    }
   }
 })();
