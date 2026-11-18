@@ -2,7 +2,7 @@
    SONARE — Service Worker (v2 — com features do violão)
 ============================================================ */
 
-const CACHE_VERSION = 'sonare-v51';
+const CACHE_VERSION = 'sonare-v52';
 const APP_SHELL = [
   './',
   './index.html',
@@ -86,7 +86,9 @@ self.addEventListener('fetch', (event) => {
       const cache = await caches.open(CACHE_VERSION);
       try {
         const net = await Promise.race([
-          fetch(request),
+          // no-cache: confere com o servidor (o GitHub Pages manda guardar
+          // por 10 min, o que deixava a versão antiga aparecendo)
+          fetch(new Request(request.url, { cache: 'no-cache', credentials: 'same-origin' })),
           new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 4000)),
         ]);
         if (net && net.ok) cache.put(request, net.clone());
