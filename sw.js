@@ -2,7 +2,7 @@
    SONARE — Service Worker (v2 — com features do violão)
 ============================================================ */
 
-const CACHE_VERSION = 'sonare-v50';
+const CACHE_VERSION = 'sonare-v51';
 const APP_SHELL = [
   './',
   './index.html',
@@ -75,19 +75,43 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  if (request.method !== 'GET') return;
+
+  // Páginas, scripts, estilos e dados: busca a versão NOVA primeiro (assim
+  // atualização chega na hora); sem internet ou demorando >4s, usa a cópia salva.
+  // Imagens, sons e fontes: cópia salva primeiro (mudam pouco).
+  const codigo = request.mode === 'navigate' || /\.(html|js|css|json|webmanifest)$/.test(url.pathname) || url.pathname.endsWith('/');
+  if (codigo) {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_VERSION);
+      try {
+        const net = await Promise.race([
+          fetch(request),
+          new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 4000)),
+        ]);
+        if (net && net.ok) cache.put(request, net.clone());
+        return net;
+      } catch (e) {
+        const cached = await cache.match(request, { ignoreSearch: true }) || await caches.match(request, { ignoreSearch: true });
+        if (cached) return cached;
+        if (request.mode === 'navigate') {
+          return (await caches.match(url.pathname.endsWith('admin.html') ? './admin.html' : './index.html')) || Response.error();
+        }
+        return Response.error();
+      }
+    })());
+    return;
+  }
+
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) return cached;
       return fetch(request).then((net) => {
-        if (net.ok && request.method === 'GET') {
+        if (net.ok) {
           const clone = net.clone();
           caches.open(CACHE_VERSION).then((cache) => cache.put(request, clone));
         }
         return net;
-      }).catch(() => {
-        if (request.mode === 'navigate') {
-          return caches.match('./index.html');
-        }
       });
     })
   );
