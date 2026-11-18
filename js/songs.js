@@ -75,14 +75,14 @@ const Songs = {
       item.className = 'song-item';
       item.innerHTML = `
         <div class="song-info">
-          <h3>${isPlayed ? '✓ ' : ''}${song.title}</h3>
-          <div class="song-artist">${song.artist} • Tom: ${song.key}</div>
+          <h3>${isPlayed ? '✓ ' : ''}${escHTML(song.title)}</h3>
+          <div class="song-artist">${escHTML(song.artist)} • Tom: ${escHTML(song.key)}</div>
           <div class="song-tags">
-            <span class="badge">${song.category}</span>
-            ${song.bpm ? `<span class="badge">${song.bpm} BPM</span>` : ''}
+            <span class="badge">${escHTML(song.category)}</span>
+            ${song.bpm ? `<span class="badge">${escHTML(song.bpm)} BPM</span>` : ''}
           </div>
         </div>
-        <button class="secondary" data-del="${song.id}">▶ Tocar</button>
+        <button class="secondary" data-del="${escHTML(song.id)}">▶ Tocar</button>
       `;
       item.querySelector('button').addEventListener('click', e => {
         e.stopPropagation();
@@ -184,7 +184,7 @@ const Songs = {
 
   renderLyrics() {
     if (!this.currentSong) return;
-    const lyrics = this.currentSong.lyrics;
+    const lyrics = escHTML(this.currentSong.lyrics || '');
     // Detectar cifras entre colchetes: [C], [Am7], [G/B], etc
     const html = lyrics
       .split('\n')

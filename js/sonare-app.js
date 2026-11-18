@@ -1,5 +1,15 @@
 // ============= APP PRINCIPAL =============
 
+/**
+ * Data 'AAAA-MM-DD' no fuso do aparelho.
+ * (toISOString() usa UTC: no Brasil, depois das 21h já virava o dia
+ * seguinte, quebrando a sequência e o gráfico semanal.)
+ */
+function diaLocal(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+window.diaLocal = diaLocal;
+
 const SonareApp = {
   init() {
     this.bindTabs();
@@ -75,6 +85,20 @@ const SonareApp = {
     });
   },
 
+  /** Chamado quando o conteúdo (teoria/exercícios/lições/músicas) chega ou muda no servidor */
+  atualizarConteudo() {
+    try {
+      Exercises.render();
+      Lessons.render();
+      Songs.render();
+      const ativo = document.querySelector('.theory-tab.active');
+      Theory.showTabContent(ativo ? ativo.dataset.topic : 'notes');
+      this.updateProgress();
+    } catch (e) {
+      console.warn('[conteudo] re-render:', e);
+    }
+  },
+
   toast(msg) {
     const toast = document.getElementById('toast');
     toast.textContent = msg;
@@ -86,7 +110,7 @@ const SonareApp = {
   // ============= PROGRESSO =============
   addPracticeMinutes(minutes) {
     const data = JSON.parse(localStorage.getItem('practiceData') || '{}');
-    const today = new Date().toISOString().split('T')[0];
+    const today = diaLocal();
     data[today] = (data[today] || 0) + minutes;
     localStorage.setItem('practiceData', JSON.stringify(data));
     this.updateProgress();
@@ -105,7 +129,7 @@ const SonareApp = {
     for (let i = 0; i < 365; i++) {
       const d = new Date(today);
       d.setDate(d.getDate() - i);
-      const key = d.toISOString().split('T')[0];
+      const key = diaLocal(d);
       if (data[key] && data[key] > 0) {
         streak++;
       } else if (i > 0) {
@@ -149,7 +173,7 @@ const SonareApp = {
     for (let i = 6; i >= 0; i--) {
       const d = new Date(today);
       d.setDate(d.getDate() - i);
-      const key = d.toISOString().split('T')[0];
+      const key = diaLocal(d);
       const dayLabel = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'][d.getDay()];
       days.push({ label: dayLabel, value: data[key] || 0 });
     }

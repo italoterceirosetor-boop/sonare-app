@@ -252,15 +252,15 @@ function loadAulasFirebase(callback) {
     const aulas = Object.entries(data)
       .map(([id, a]) => ({ id, ...a }))
       .sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
-    callback(aulas);
 
-    // Cache local
+    // Cache local primeiro (inclui remoções), depois avisa a tela
     if (window.SonareDB?.clear) {
       try {
         await window.SonareDB.clear('aulas');
         for (const a of aulas) await window.SonareDB.put('aulas', a);
       } catch (e) {}
     }
+    callback(aulas);
   });
 }
 
@@ -301,8 +301,9 @@ const DEFAULT_ALARME_FB = {
 async function saveAlunoFirebase(aluno) {
   await initFirebase();
   const id = String(aluno.id || Date.now());
-  // update (não set) pra não apagar dados que o aluno grava, como /ritmos
-  const { ritmos, ...dados } = aluno;
+  // update (não set) e sem os dados que o próprio aluno grava (/ritmos,
+  // /progresso) — senão o admin sobrescreveria com uma cópia velha
+  const { ritmos, progresso, ...dados } = aluno;
   await firebaseDb.ref(`/alunos/${id}`).update({ ...dados, id, updatedAt: Date.now() });
   await syncCodigosFirebase();
   return id;

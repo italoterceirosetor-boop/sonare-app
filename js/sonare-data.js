@@ -66,7 +66,7 @@ for (let oct = 0; oct < 9; oct++) {
 const KEYS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
 // ============= BIBLIOTECA DE MÚSICAS =============
-const SONGS_LIBRARY = [
+var SONGS_LIBRARY = [
   {
     id: 's1', title: 'Casa no Campo', artist: 'Zezé Di Camargo & Luciano',
     category: 'sertanejo', key: 'G', bpm: 110,
@@ -968,7 +968,7 @@ Te amar, ó meu Jesus`
 ];
 
 // ============= EXERCÍCIOS =============
-const EXERCISES = [
+var EXERCISES = [
   {
     id: 'ex1', title: 'Esquentando os Dedos', level: 'beginner',
     duration: '5 min', category: 'Digitação',
@@ -1141,7 +1141,7 @@ const EXERCISES = [
 ];
 
 // ============= TEORIA MUSICAL =============
-const THEORY_CONTENT = {
+var THEORY_CONTENT = {
   notes: {
     title: 'Notas Musicais',
     html: `
@@ -1298,7 +1298,7 @@ E|------------------------------|
 };
 
 // ============= APOSTILAS / LIÇÕES =============
-const LESSONS = [
+var LESSONS = [
   // ============ INICIANTE ============
   {
     id: 'l1', level: 'beginner', order: 1,

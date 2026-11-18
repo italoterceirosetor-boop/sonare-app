@@ -53,17 +53,17 @@ const Lessons = {
       item.innerHTML = `
         <div class="exercise-header">
           <div>
-            <h3>${isDone ? '✓ ' : ''}${lesson.title}</h3>
+            <h3>${isDone ? '✓ ' : ''}${escHTML(lesson.title)}</h3>
             <div class="exercise-meta">
-              <span class="badge ${lesson.level}">${this.levelLabel(lesson.level)}</span>
-              <span>⏱ ${lesson.duration}</span>
+              <span class="badge ${escHTML(lesson.level)}">${this.levelLabel(lesson.level)}</span>
+              <span>⏱ ${escHTML(lesson.duration)}</span>
             </div>
           </div>
           <span class="exercise-arrow">▼</span>
         </div>
         <div class="exercise-body">
-          <p style="color:var(--text-muted);font-style:italic">${lesson.summary}</p>
-          <div class="lesson-content" data-content="${lesson.id}"></div>
+          <p style="color:var(--text-muted);font-style:italic">${escHTML(lesson.summary)}</p>
+          <div class="lesson-content" data-content="${escHTML(lesson.id)}"></div>
           <div class="exercise-actions">
             <button class="primary" data-action="done">${isDone ? '✓ Concluída' : 'Marcar como lida'}</button>
           </div>
@@ -76,7 +76,7 @@ const Lessons = {
         if (isOpen) {
           const contentDiv = item.querySelector('.lesson-content');
           if (!contentDiv.innerHTML) {
-            contentDiv.innerHTML = lesson.content;
+            contentDiv.innerHTML = limparHTML(lesson.content);
           }
         }
       });

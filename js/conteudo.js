@@ -79,10 +79,17 @@ async function loadConteudo() {
 function aplicarConteudo(conteudo) {
   if (!conteudo) return;
   window.SonareConteudo = conteudo;
-  window.SONGS_LIBRARY = conteudo.musicas || [];
-  window.THEORY_CONTENT = conteudo.teoria || {};
-  window.EXERCISES = conteudo.exercicios || [];
-  window.LESSONS = conteudo.licoes || [];
+  // O Firebase às vezes devolve lista como objeto {0:...,1:...}; e não guarda
+  // lista vazia. Se a parte não veio, mantém o conteúdo de fábrica (sonare-data.js).
+  const lista = (v) => Array.isArray(v) ? v.filter(Boolean) : (v && typeof v === 'object' ? Object.values(v).filter(Boolean) : null);
+  const musicas = lista(conteudo.musicas);
+  const exercicios = lista(conteudo.exercicios);
+  const licoes = lista(conteudo.licoes);
+  // (sonare-data.js declara com "var", então isto troca o que as telas leem)
+  if (musicas) window.SONGS_LIBRARY = musicas;
+  if (conteudo.teoria && typeof conteudo.teoria === 'object') window.THEORY_CONTENT = conteudo.teoria;
+  if (exercicios) window.EXERCISES = exercicios;
+  if (licoes) window.LESSONS = licoes;
   // Cache local
   if (window.SonareDB?.put) {
     window.SonareDB.put('conteudo', { key: SONARE_CONTEUDO_INDEX, data: conteudo, updatedAt: Date.now() }).catch(() => {});

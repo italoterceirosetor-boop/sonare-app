@@ -83,8 +83,21 @@ async function render() {
    AULAS
 ============================================================ */
 async function renderAulas() {
-  // NOTA: Firebase sync REMOVIDO — causava duplicação.
-  // Aulas ficam só no IndexedDB local.
+  // Firebase é a fonte da verdade (é de lá que os alunos leem).
+  // Antes a lista vinha só deste aparelho, com ids diferentes dos do
+  // Firebase — por isso "Excluir" não apagava a aula pros alunos.
+  let avisoOffline = '';
+  if (window.FIREBASE_CONFIGURED && window.firebase) {
+    try {
+      const snap = await window.firebase.database().ref('/aulas').once('value');
+      const fb = snap.val() || {};
+      await clear('aulas');
+      for (const [id, a] of Object.entries(fb)) await put('aulas', { ...a, id: String(id) });
+    } catch (e) {
+      console.warn('Firebase (aulas) falhou:', e.message);
+      avisoOffline = '<div class="empty-state"><strong>Sem conexão com o servidor</strong>Mostrando a última lista salva neste aparelho.</div>';
+    }
+  }
   const aulas = await getAll('aulas');
 
   const form = `
@@ -146,6 +159,7 @@ async function renderAulas() {
   `;
 
   const lista = `
+    ${avisoOffline}
     <p class="section-title">Aulas publicadas (${aulas.length})</p>
     ${aulas.length === 0 ? '<div class="empty-state"><strong>Nenhuma aula publicada</strong>Adicione a primeira acima.</div>' : ''}
     ${aulas.sort((a,b) => (a.ordem||0) - (b.ordem||0)).map(a => `
@@ -181,10 +195,18 @@ async function renderAulas() {
       descricao: fd.get('descricao').trim(),
       ordem: Date.now(),
       criadaEm: Date.now(),
-      concluida: false,
     };
-    await smartSave('aulas', aula, window.saveAulaFirebase);
-    showToast('Aula adicionada.');
+    try {
+      // Firebase primeiro: o id gerado lá é o mesmo usado aqui
+      if (window.FIREBASE_CONFIGURED && window.saveAulaFirebase) {
+        aula.id = await window.saveAulaFirebase(aula);
+      }
+      await put('aulas', aula);
+      showToast('Aula adicionada.');
+    } catch (err) {
+      showToast('Não consegui salvar no servidor. Verifique a internet e tente de novo.');
+      return;
+    }
     render();
   });
 
@@ -192,8 +214,16 @@ async function renderAulas() {
     btn.addEventListener('click', async () => {
       if (!confirm('Excluir esta aula?')) return;
       const id = btn.dataset.del;
-      await smartDelete('aulas', id, window.deleteAulaFirebase);
-      showToast('Aula excluída.');
+      try {
+        if (window.FIREBASE_CONFIGURED && window.deleteAulaFirebase) {
+          await window.deleteAulaFirebase(id);
+        }
+        await del('aulas', id);
+        showToast('Aula excluída.');
+      } catch (err) {
+        showToast('Não consegui excluir no servidor. Verifique a internet e tente de novo.');
+        return;
+      }
       render();
     });
   });
@@ -257,12 +287,14 @@ async function renderAlunos() {
       ).join(' ');
       const horaStr = String(alarme.hora).padStart(2,'0') + ':' + String(alarme.minuto).padStart(2,'0');
       const alarmeStr = alarme.ativo ? '🔔 ' + horaStr + ' ' + diasLabel : '🔕 desativado';
+      const progStr = resumoProgresso(a.progresso);
       return `
       <div class="list-item" style="opacity: ${a.revogado ? '0.4' : '1'}">
         <div style="flex: 1; min-width: 0;">
           <div class="list-item__title">${escapeHTML(a.nome)}</div>
           <div class="list-item__sub">${a.revogado ? 'revogado' : 'ativo'}${a.nivel ? ' · ' + escapeHTML(a.nivel) : ''}</div>
           <div class="list-item__sub" style="margin-top: 4px; color: var(--gold); font-size: .85rem;">${alarmeStr}</div>
+          <div class="list-item__sub" style="margin-top: 4px; font-size: .85rem;">${progStr}</div>
         </div>
         <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end;">
           <span class="list-item__code">${escapeHTML(a.codigo)}</span>
@@ -389,6 +421,29 @@ async function renderAlunos() {
       openAlarmeModal(aluno);
     });
   });
+}
+
+/** Resumo do progresso que o app do aluno envia (/alunos/{id}/progresso) */
+function resumoProgresso(p) {
+  if (!p || !p.updatedAt) return '📊 ainda sem progresso enviado';
+  const parse = (k) => { try { return JSON.parse(p[k] || 'null'); } catch { return null; } };
+  const pratica = parse('practiceData') || {};
+  const total = Object.values(pratica).reduce((s, m) => s + (Number(m) || 0), 0);
+  const dia = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  let seq = 0;
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    if ((pratica[dia(d)] || 0) > 0) seq++;
+    else if (i > 0) break;
+  }
+  const semana = [...Array(7)].reduce((s, _, i) => {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    return s + (pratica[dia(d)] || 0);
+  }, 0);
+  const tarefas = (parse('tasks') || []).filter(t => t.done).length;
+  const aulas = (parse('aulasConcluidas') || []).length;
+  const ultima = new Date(p.updatedAt).toLocaleDateString('pt-BR');
+  return `📊 ${semana} min nesta semana · ${total} min no total · 🔥 ${seq} dia(s) seguidos · ✓ ${aulas} aula(s), ${tarefas} tarefa(s) · visto em ${ultima}`;
 }
 
 function openAlarmeModal(aluno) {
@@ -1051,13 +1106,13 @@ async function smartDelete(store, id, firebaseOp) {
    BOOTSTRAP
 ============================================================ */
 async function bootstrap() {
-  try {
-    const resp = await fetch('./data/seed.json');
-    if (resp.ok) {
-      const seed = await resp.json();
-      await seedIfNeeded(seed);
-    }
-  } catch (e) {}
+  // Aulas de exemplo só no modo sem servidor (com Firebase elas poluíam a lista)
+  if (!window.FIREBASE_CONFIGURED) {
+    try {
+      const resp = await fetch('./data/seed.json');
+      if (resp.ok) await seedIfNeeded(await resp.json());
+    } catch (e) {}
+  }
 
   try { await loadConteudo(); } catch (e) { console.warn('Conteudo:', e); }
 

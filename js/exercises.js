@@ -36,23 +36,23 @@ const Exercises = {
       item.innerHTML = `
         <div class="exercise-header">
           <div>
-            <h3>${isDone ? '✓ ' : ''}${ex.title}</h3>
+            <h3>${isDone ? '✓ ' : ''}${escHTML(ex.title)}</h3>
             <div class="exercise-meta">
-              <span class="badge ${ex.level}">${this.levelLabel(ex.level)}</span>
-              <span>${ex.category}</span>
-              <span>⏱ ${ex.duration}</span>
+              <span class="badge ${escHTML(ex.level)}">${this.levelLabel(ex.level)}</span>
+              <span>${escHTML(ex.category)}</span>
+              <span>⏱ ${escHTML(ex.duration)}</span>
             </div>
           </div>
           <span class="exercise-arrow">▼</span>
         </div>
         <div class="exercise-body">
-          <p>${ex.description}</p>
+          <p>${escHTML(ex.description)}</p>
           <h4 style="font-size:14px;margin:12px 0 8px;color:#2a9d8f">Como fazer:</h4>
           <ol class="exercise-steps">
-            ${ex.steps.map(s => `<li>${s}</li>`).join('')}
+            ${(ex.steps || []).map(s => `<li>${escHTML(s)}</li>`).join('')}
           </ol>
           <p style="background:#0f1729;padding:10px;border-radius:8px;font-size:13px;margin-top:10px">
-            <strong>💡 Dica:</strong> ${ex.tip}
+            <strong>💡 Dica:</strong> ${escHTML(ex.tip)}
           </p>
           <div class="exercise-actions">
             <button class="primary" data-action="done">${isDone ? '✓ Concluído' : 'Marcar como feito'}</button>

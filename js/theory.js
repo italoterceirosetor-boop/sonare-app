@@ -177,7 +177,7 @@ const Theory = {
     const fonteTeoria = (typeof THEORY_CONTENT !== 'undefined' ? THEORY_CONTENT : (window.THEORY_CONTENT || (window.SonareConteudo && window.SonareConteudo.teoria) || {}));
     const t = fonteTeoria[topic];
     if (!t) return;
-    content.innerHTML = `<h2 style="color:#f4a261;margin-bottom:16px">${t.title}</h2>${t.html}`;
+    content.innerHTML = `<h2 style="color:#f4a261;margin-bottom:16px">${escHTML(t.title)}</h2>${limparHTML(t.html)}`;
     // Pós-renders
     if (topic === 'notes') this.renderNotes();
     if (topic === 'chords') this.renderChords();

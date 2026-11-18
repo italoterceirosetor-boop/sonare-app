@@ -42,6 +42,13 @@
         ".read": "auth != null && root.child('vinculos').child(auth.uid).exists() && root.child('codigos').child(root.child('vinculos').child(auth.uid).val()).child('alunoId').val() === $id && root.child('alunos').child($id).child('revogado').val() !== true",
         "ritmos": {
           ".write": "auth != null && root.child('vinculos').child(auth.uid).exists() && root.child('codigos').child(root.child('vinculos').child(auth.uid).val()).child('alunoId').val() === $id && root.child('alunos').child($id).child('revogado').val() !== true"
+        },
+        "progresso": {
+          ".write": "auth != null && root.child('vinculos').child(auth.uid).exists() && root.child('codigos').child(root.child('vinculos').child(auth.uid).val()).child('alunoId').val() === $id && root.child('alunos').child($id).child('revogado').val() !== true",
+          ".validate": "newData.hasChild('updatedAt')",
+          "$campo": {
+            ".validate": "$campo === 'updatedAt' ? newData.isNumber() : (newData.isString() && newData.val().length < 200000)"
+          }
         }
       }
     }

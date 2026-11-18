@@ -2,7 +2,7 @@
    SONARE — Service Worker (v2 — com features do violão)
 ============================================================ */
 
-const CACHE_VERSION = 'sonare-v48';
+const CACHE_VERSION = 'sonare-v49';
 const APP_SHELL = [
   './',
   './index.html',
@@ -12,6 +12,8 @@ const APP_SHELL = [
   './js/firebase-config.js',
   './js/firebase-sync.js',
   './js/ritmos.js',
+  './js/progresso.js',
+  './js/seguro.js',
   './assets/logo.svg',
   './assets/alarm.mp3',
   './css/styles.css',

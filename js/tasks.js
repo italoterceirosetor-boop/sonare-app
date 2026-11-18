@@ -86,7 +86,10 @@ const Tasks = {
       return;
     }
 
-    const today = new Date().toISOString().split('T')[0];
+    // Data de hoje no fuso do aparelho (toISOString usa UTC: depois das 21h
+    // no Brasil já seria "amanhã" e a tarefa de hoje aparecia atrasada)
+    const n = new Date();
+    const today = `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}`;
 
     filtered.forEach(task => {
       const item = document.createElement('div');
@@ -98,7 +101,7 @@ const Tasks = {
       item.innerHTML = `
         <div class="task-check ${task.done ? 'checked' : ''}" data-id="${task.id}"></div>
         <div class="task-info">
-          <div class="task-text">${task.text}</div>
+          <div class="task-text">${escHTML(task.text)}</div>
           <div class="task-meta">
             <span class="badge">${catLabels[task.category] || task.category}</span>
             <span style="${overdue ? 'color:#e76f51' : isToday ? 'color:#f4a261' : ''}">

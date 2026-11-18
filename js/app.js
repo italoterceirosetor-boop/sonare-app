@@ -63,32 +63,39 @@ function showLogin() {
 /* ============================================================
    RENDER — Lista de aulas (aba Aulas)
 ============================================================ */
-async function renderAulasAdmin() {
+/* Aulas concluídas ficam guardadas à parte (por id), pra não se perderem
+   quando a lista de aulas é recarregada do servidor. */
+function getAulasConcluidas() {
+  try { return new Set(JSON.parse(localStorage.getItem('aulasConcluidas') || '[]').map(String)); }
+  catch { return new Set(); }
+}
+function setAulaConcluida(id, feita) {
+  const s = getAulasConcluidas();
+  feita ? s.add(String(id)) : s.delete(String(id));
+  localStorage.setItem('aulasConcluidas', JSON.stringify([...s]));
+  window.SonareProgresso?.salvar();
+}
+
+/** Substitui as aulas do aparelho pela lista do servidor (inclusive remoções). */
+async function substituirAulasLocais(aulas) {
+  await window.SonareDB.clear('aulas');
+  for (const a of aulas) await put('aulas', { ...a, id: String(a.id) });
+}
+
+async function renderAulasAdmin(opts = {}) {
   // Sincroniza do Firebase (one-shot) pra ter as aulas mais recentes
-  if (window.firebase) {
+  if (opts.sync !== false && window.FIREBASE_CONFIGURED && window.firebase) {
     try {
-      const fbRaw = await new Promise((resolve) => {
-        const ref = window.firebase?.database?.()?.ref?.('/aulas');
-        if (!ref) return resolve(null);
-        ref.once('value', (snap) => resolve(snap.val() || null), () => resolve(null));
-      });
-      if (fbRaw) {
-        const fbAulas = Object.entries(fbRaw).map(([id, a]) => ({ ...a, id }));
-        // Mescla com local (Firebase = source of truth)
-        const locais = await getAll('aulas');
-        const localByCode = new Map(); // não tem codigo, usa id
-        for (const fb of fbAulas) {
-          const local = locais.find(l => String(l.id) === String(fb.id));
-          await put('aulas', { ...fb, id: local?.id || fb.id });
-        }
-        console.log(`[app] Sincronizou ${fbAulas.length} aulas do Firebase`);
-      }
+      const snap = await window.firebase.database().ref('/aulas').once('value');
+      const fbAulas = Object.entries(snap.val() || {}).map(([id, a]) => ({ ...a, id }));
+      await substituirAulasLocais(fbAulas);
     } catch (e) {
-      console.warn('Firebase sync (aulas) falhou:', e.message);
+      console.warn('Firebase sync (aulas) falhou — usando aulas salvas:', e.message);
     }
   }
 
-  const todasAulas = await getAll('aulas');
+  const concluidas = getAulasConcluidas();
+  const todasAulas = (await getAll('aulas')).map(a => ({ ...a, concluida: concluidas.has(String(a.id)) }));
 
   // Filtra por nível do aluno (se aluno não tem nível, vê tudo)
   const aluno = await getAlunoLogado();
@@ -132,6 +139,7 @@ async function renderAula(id) {
   const aulas = await getAll('aulas');
   // Compara id como string ou number (Firebase pode vir string, IndexedDB number)
   const aula = aulas.find(a => String(a.id) === String(id));
+  if (aula) aula.concluida = getAulasConcluidas().has(String(aula.id));
   if (!aula) {
     console.warn('[aula] não encontrada, id=', id, 'aulas=', aulas.map(a => a.id));
     return;
@@ -161,9 +169,9 @@ async function renderAula(id) {
   modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
   modal.querySelector('#concluir').addEventListener('click', async () => {
     aula.concluida = !aula.concluida;
-    await put('aulas', aula);
+    setAulaConcluida(aula.id, aula.concluida);
     modal.querySelector('#concluir').textContent = aula.concluida ? '✓ Concluída' : 'Marcar como concluída';
-    SonareApp.addPracticeMinutes(5);
+    if (aula.concluida) SonareApp.addPracticeMinutes(5); // não soma minutos ao desmarcar
     SonareApp.updateProgress();
     renderAulasAdmin();
   });
@@ -199,10 +207,18 @@ async function bootstrap() {
   // Wire up sair
   $('#sair-btn').onclick = async () => {
     if (!confirm('Tem certeza que quer sair?')) return;
+    // Envia o progresso e limpa do aparelho (o próximo aluno não herda)
+    try { await window.SonareProgresso?.enviarAgora(); } catch {}
+    for (const k of window.SonareProgresso?.CHAVES || []) localStorage.removeItem(k);
     await logout();
     stopAlarm();
     location.reload();
   };
+
+  // Traz o progresso salvo na nuvem (troca de celular, navegador limpo...)
+  if (window.SonareProgresso) {
+    window.SonareProgresso.carregar(aluno.id).catch(e => console.warn('[progresso]', e));
+  }
 
   // Render lista de aulas
   await renderAulasAdmin();
@@ -231,19 +247,9 @@ async function bootstrap() {
   // Escutar aulas em tempo real do Firebase (atualiza IDB quando professor salva)
   if (window.loadAulasFirebase) {
     try {
-      window.loadAulasFirebase(async (aulas) => {
-        // Recarrega lista de aulas na aba atual
-        const tabAtiva = document.querySelector('.tab-panel.active');
-        if (tabAtiva && tabAtiva.id === 'tab-lessons') {
-          // Limpa e regrava aulas no IDB
-          await window.SonareDB.clear('aulas');
-          for (const a of aulas) await window.SonareDB.put('aulas', a);
-          renderAulasAdmin(); // re-renderiza só a lista
-        } else {
-          await window.SonareDB.clear('aulas');
-          for (const a of aulas) await window.SonareDB.put('aulas', a);
-        }
-      });
+      // Quando o professor adiciona/exclui uma aula, a lista atualiza na hora
+      // (firebase-sync.js já regrava as aulas no aparelho antes de chamar aqui)
+      window.loadAulasFirebase(() => renderAulasAdmin({ sync: false }));
     } catch (e) {
       console.warn('Firebase listener:', e.message);
     }
@@ -258,12 +264,15 @@ async function bootstrap() {
     }
   }
 
-  // Seed aulas (primeira vez)
-  try {
-    const seed = await fetch('./data/seed.json').then(r => r.ok ? r.json() : null).catch(() => null);
-    if (seed) await seedIfNeeded(seed);
-    await renderAulasAdmin();
-  } catch {}
+  // Aulas de exemplo só no modo sem servidor (com Firebase, as aulas vêm de lá;
+  // antes as de exemplo apareciam misturadas com as do professor)
+  if (!window.FIREBASE_CONFIGURED) {
+    try {
+      const seed = await fetch('./data/seed.json').then(r => r.ok ? r.json() : null).catch(() => null);
+      if (seed) await seedIfNeeded(seed);
+      await renderAulasAdmin();
+    } catch {}
+  }
 
   // Alarme
   startAlarmLoop();
